@@ -36,7 +36,7 @@ jobs:
           pip install -r cfgs/pkgs/requirements.txt
 
       - name: Run weekly literature survey pipeline
-        run: python -m pkgs.surveys.clis.run --max_results 10 --card_limit 5
+        run: python -m pkgs.surveys.clis.run
 
       - name: Commit generated data and reports
         run: |
