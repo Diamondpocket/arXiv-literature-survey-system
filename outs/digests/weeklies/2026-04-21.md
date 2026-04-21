@@ -2,6 +2,7 @@
 
 Date / 日期: 2026-04-21
 Evidence base / 证据基础: 134 structured arXiv paper cards / 134 张结构化 arXiv 论文卡片。
+Notice: generated in mock mode. Regenerate with a real LLM API before final submission.
 
 ## 本周概览 Weekly Overview
 本次周报基于已留存的 JSON 卡片生成，覆盖 134 篇论文。最新样本包括：
