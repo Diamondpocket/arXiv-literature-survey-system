@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RAG Weekly Survey Console</title>
+    <link rel="stylesheet" href="/frontend/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <div class="topbar-copy">
+          <p class="eyebrow">arXiv Weekly Survey</p>
+          <h1>RAG 文献综述控制台</h1>
+          <p class="lede">
+            持续抓取、结构化抽取、分类对比、趋势判断与 Weekly Survey Digest 生成。
+            这个页面会实时读取当前工作流、最近几次运行记录，以及本轮新增论文与卡片产物。
+          </p>
+
+          <div class="hero-badges" aria-label="product badges">
+            <span class="hero-badge">Live Workflow</span>
+            <span class="hero-badge">Structured Evidence</span>
+            <span class="hero-badge">Weekly Digest</span>
+          </div>
+
+          <div id="heroStatusGrid" class="hero-status-grid" aria-label="hero status"></div>
+        </div>
+
+        <div class="topbar-visual">
+          <img class="system-image" src="/frontend/assets/knowledge-map.png" alt="RAG knowledge map" />
+          <div class="visual-caption" id="visualCaption">Waiting for pipeline status...</div>
+        </div>
+      </section>
+
+      <section class="metrics" id="metrics" aria-label="pipeline metrics"></section>
+
+      <section class="monitor-band" aria-label="pipeline monitor">
+        <div class="monitor-head">
+          <div>
+            <p class="eyebrow">Pipeline Monitor</p>
+            <h2>流水线状态监控</h2>
+            <p id="monitorHeadline" class="monitor-headline">正在读取当前 pipeline 状态...</p>
+          </div>
+          <div id="monitorMeta" class="monitor-meta"></div>
+        </div>
+
+        <div id="stageStrip" class="stage-strip"></div>
+
+        <div class="monitor-grid">
+          <article class="monitor-panel panel-feed">
+            <div class="monitor-panel-head">
+              <div>
+                <p class="panel-kicker">Real-Time Feed</p>
+                <h3 class="monitor-subtitle">实时事件 Activity Feed</h3>
+              </div>
+            </div>
+            <div id="activityFeed" class="activity-feed"></div>
+          </article>
+
+          <article class="monitor-panel panel-snapshot">
+            <div class="monitor-panel-head">
+              <div>
+                <p class="panel-kicker">Runtime Snapshot</p>
+                <h3 class="monitor-subtitle">运行快照 Runtime Snapshot</h3>
+              </div>
+            </div>
+            <div id="activitySummary" class="activity-summary"></div>
+          </article>
+
+          <article class="monitor-panel panel-new-papers">
+            <div class="monitor-panel-head">
+              <div>
+                <p class="panel-kicker">Fetch Delta</p>
+                <h3 class="monitor-subtitle">新增论文 Newly Fetched Papers</h3>
+              </div>
+            </div>
+            <div id="newPapersPanel" class="new-paper-list"></div>
+          </article>
+
+          <article class="monitor-panel panel-history">
+            <div class="monitor-panel-head">
+              <div>
+                <p class="panel-kicker">Run Archive</p>
+                <h3 class="monitor-subtitle">最近运行记录 Recent Runs</h3>
+              </div>
+            </div>
+            <div id="historyPanel" class="run-history"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panels report-first">
+        <article>
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Digest</p>
+              <h2>周报 Weekly Digest</h2>
+            </div>
+            <span>latest</span>
+          </div>
+          <div id="weeklyPanel" class="markdown"></div>
+        </article>
+
+        <article>
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Taxonomy</p>
+              <h2>分类体系 Taxonomy</h2>
+            </div>
+            <span>categories</span>
+          </div>
+          <div id="taxonomyPanel" class="markdown"></div>
+        </article>
+
+        <article>
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Trends</p>
+              <h2>趋势分析 Trend Analysis</h2>
+            </div>
+            <span>gaps</span>
+          </div>
+          <div id="trendPanel" class="markdown"></div>
+        </article>
+      </section>
+
+      <section class="comparison">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Comparison Matrix</p>
+            <h2>方法对比表 Method Comparison</h2>
+          </div>
+          <span id="comparisonCount">0 rows</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Method</th>
+                <th>Complexity</th>
+                <th>Scenario</th>
+                <th>Data</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody id="comparisonBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="filters">
+          <div class="filter-head">
+            <p class="section-kicker">Explorer</p>
+            <h3>论文检索与过滤</h3>
+          </div>
+
+          <label>
+            搜索
+            <input id="searchInput" type="search" placeholder="title, method, dataset..." />
+          </label>
+          <label>
+            分类
+            <select id="categorySelect">
+              <option value="">All categories</option>
+            </select>
+          </label>
+          <label>
+            置信度
+            <select id="confidenceSelect">
+              <option value="">All confidence</option>
+              <option value="high">high</option>
+              <option value="medium">medium</option>
+              <option value="low">low</option>
+            </select>
+          </label>
+          <button id="refreshButton" type="button">刷新视图</button>
+          <p class="hint">
+            数据来自 <code>paper_cards.jsonl</code>、<code>taxonomy.md</code>、
+            <code>comparison_table.csv</code>、<code>trend_analysis.md</code>，
+            并额外读取 <code>pipeline_status.json</code> 与 <code>pipeline_history.json</code>。
+          </p>
+        </aside>
+
+        <section class="papers">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Paper Library</p>
+              <h2>论文卡片 Paper Cards</h2>
+            </div>
+            <span id="paperCount">0 papers</span>
+          </div>
+          <div id="cardsList" class="cards-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/frontend/app.js"></script>
+  </body>
+</html>

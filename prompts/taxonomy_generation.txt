@@ -1,0 +1,14 @@
+You are generating a taxonomy for a literature survey.
+
+Inputs are structured paper cards generated from arXiv abstracts. Use only those cards. Do not introduce external papers, facts, or claims.
+
+Generate a Markdown taxonomy containing:
+1. High-level categories with bilingual labels, formatted as `中文类别 (English Category)`.
+2. The evidence count for each category.
+3. Representative papers by title.
+4. Common innovation types.
+5. Ambiguous or low-confidence areas that need human review.
+
+The taxonomy must be based on the fields in paper_cards, especially best_fit_category, innovation_type, problem, key_idea, method, dataset_or_scenario, metrics, limitations, and confidence_level.
+
+Do not directly summarize abstracts. Synthesize from the structured cards.

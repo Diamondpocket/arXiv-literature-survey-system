@@ -1,0 +1,93 @@
+[
+  {
+    "run_id": "20260421T065008Z",
+    "topic": "Retrieval-Augmented Generation, RAG",
+    "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
+    "max_results": 100,
+    "years": 2,
+    "status": "completed",
+    "message": "Pipeline finished successfully.",
+    "started_at": "2026-04-21T06:50:08.563219+00:00",
+    "finished_at": "2026-04-21T06:50:11.756694+00:00",
+    "updated_at": "2026-04-21T06:50:11.756694+00:00",
+    "fetch_stats": {
+      "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
+      "years": 2,
+      "max_results": 100,
+      "saved_count": 134,
+      "new_count": 0,
+      "reused_count": 134,
+      "skipped": true
+    },
+    "cards_stats": {
+      "existing_count_before": 134,
+      "candidate_count": 0,
+      "generated_count": 0,
+      "total_cards_after": 134,
+      "recent_cards_preview": [],
+      "output_path": "C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\data\\paper_cards.jsonl"
+    },
+    "analysis_stats": {
+      "taxonomy_path": "C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\outputs\\taxonomy.md",
+      "comparison_path": "C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\outputs\\comparison_table.csv",
+      "trend_path": "C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\outputs\\trend_analysis.md",
+      "comparison_rows": 134
+    },
+    "weekly_stats": {
+      "latest_path": "C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\outputs\\weekly_digest_latest.md",
+      "archive_path": "C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\outputs\\weekly\\2026-04-21.md",
+      "digest_chars": 5002
+    },
+    "recent_new_papers": [],
+    "stage_statuses": [
+      {
+        "id": "fetch",
+        "label_zh": "抓取 arXiv",
+        "label_en": "Fetch arXiv",
+        "status": "skipped",
+        "detail": "Reused existing file: papers_raw.json",
+        "started_at": "2026-04-21T06:50:08.566731+00:00",
+        "finished_at": "2026-04-21T06:50:08.566731+00:00",
+        "progress_current": 0,
+        "progress_total": 100,
+        "progress_percent": 0
+      },
+      {
+        "id": "cards",
+        "label_zh": "结构化抽取",
+        "label_en": "Generate Cards",
+        "status": "completed",
+        "detail": "Structured cards available: 134. Newly generated: 0.",
+        "started_at": "2026-04-21T06:50:08.569475+00:00",
+        "finished_at": "2026-04-21T06:50:10.471914+00:00",
+        "progress_current": 0,
+        "progress_total": 0,
+        "progress_percent": 100
+      },
+      {
+        "id": "analysis",
+        "label_zh": "分类与对比分析",
+        "label_en": "Cluster Analysis",
+        "status": "completed",
+        "detail": "Analysis artifacts refreshed in outputs/.",
+        "started_at": "2026-04-21T06:50:10.473939+00:00",
+        "finished_at": "2026-04-21T06:50:10.816641+00:00",
+        "progress_current": 3,
+        "progress_total": 3,
+        "progress_percent": 100
+      },
+      {
+        "id": "weekly",
+        "label_zh": "生成每周综述",
+        "label_en": "Weekly Digest",
+        "status": "completed",
+        "detail": "Weekly digest generated successfully.",
+        "started_at": "2026-04-21T06:50:10.819941+00:00",
+        "finished_at": "2026-04-21T06:50:11.755462+00:00",
+        "progress_current": 1,
+        "progress_total": 1,
+        "progress_percent": 100
+      }
+    ]
+  }
+]

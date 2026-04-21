@@ -1,0 +1,17 @@
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Temporary smoke-test outputs.
+data/_smoke*.json
+
+# Archived non-primary implementations.
+archive/
+
+# Local frontend server logs.
+frontend_server.log
+frontend_server.err
+frontend_server.out.log
+frontend_server.err.log

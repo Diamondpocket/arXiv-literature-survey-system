@@ -1,0 +1,28 @@
+You are writing a Weekly Survey Digest for a research direction.
+
+Use only the provided structured inputs:
+- paper_cards
+- taxonomy_md
+- comparison_table
+- trend_analysis_md
+
+Do not introduce external papers, unprovided results, unprovided numbers, or claims not supported by the inputs. The digest must be generated from intermediate structured artifacts, not by simply concatenating abstracts.
+
+Write a concise 1-2 page Markdown digest in Chinese. Use bilingual labels for key section titles and taxonomy names, in the form `中文标题 English Title` or `中文类别 (English Category)`.
+
+Use these sections:
+
+1. 本周概览 Weekly Overview
+2. 分类体系摘要 Taxonomy Summary
+3. 方法对比摘要 Method Comparison
+4. 趋势分析 Trend Analysis
+5. 研究空白与未来方向 Research Gaps and Future Directions
+
+Requirements:
+- Mention the evidence base size.
+- Summarize categories instead of listing every paper.
+- For taxonomy categories, show Chinese and English labels when the input provides them.
+- Use the comparison table to describe method differences, complexity, scenario, strengths/weaknesses, and whether methods are data-driven.
+- The future directions section must include original analytical viewpoints, but those viewpoints must be grounded in the provided structured evidence.
+- If evidence is missing, say so explicitly.
+- Do not exceed roughly 1200 Chinese characters unless the input is unusually large.

@@ -1,0 +1,38 @@
+You are extracting a structured research card from one arXiv paper.
+
+Use only the provided title and abstract. Do not use outside knowledge. Do not infer datasets, metrics, experimental results, or limitations unless they are explicitly stated or directly supported by the abstract.
+
+If the abstract does not mention a field, write "unknown" or "not specified". Do not fabricate names of datasets, metrics, baselines, numbers, or claims.
+
+Return exactly one JSON object with these fields:
+
+{
+  "title": "paper title",
+  "problem": "the research problem or motivation explicitly supported by the abstract",
+  "key_idea": "the main idea explicitly supported by the abstract",
+  "method": "the method, framework, algorithm, or system design described in the abstract",
+  "dataset_or_scenario": "datasets, benchmarks, application scenarios, or domains explicitly mentioned; otherwise unknown",
+  "metrics": "evaluation metrics explicitly mentioned; otherwise unknown",
+  "results_summary": "main experimental or analytical results explicitly stated; otherwise unknown",
+  "innovation_type": "one of: retrieval_method, generation_method, benchmark_or_evaluation, system_or_architecture, application_or_domain_adaptation, reliability_or_safety, theoretical_analysis, survey, not specified",
+  "limitations": "limitations explicitly mentioned; otherwise unknown",
+  "best_fit_category": "one of the allowed taxonomy categories listed below, based only on the abstract",
+  "confidence_level": "high, medium, or low depending on how much evidence the abstract provides"
+}
+
+Rules:
+- Output JSON only. No Markdown.
+- Keep each field concise.
+- Prefer "unknown" over guessing.
+- If the title or abstract indicates the paper is a survey, mark innovation_type as "survey".
+- Choose best_fit_category from this fixed list only:
+  - Core Retrieval and Ranking Methods
+  - Agentic and Multi-Agent RAG
+  - Knowledge Graph and Structured Knowledge RAG
+  - Multimodal and Visual RAG
+  - Evaluation, Benchmarks, and Diagnostics
+  - Reliability, Safety, Privacy, and Security
+  - Domain-Specific RAG Applications
+  - Efficiency, Deployment, and On-Device RAG
+  - Survey, Theory, and Governance
+  - General or Unspecified RAG
