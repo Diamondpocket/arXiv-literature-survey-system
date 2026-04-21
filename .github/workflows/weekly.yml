@@ -41,11 +41,20 @@ jobs:
       - name: Run weekly literature survey pipeline
         run: python -m pkgs.surveys.clis.run
 
+      - name: Build dated weekly snapshot
+        run: |
+          RUN_STAMP="$(date -u +'%Y-%m-%d_%H%M%S')"
+          SNAPSHOT_ROOT="snps/weeklies/${RUN_STAMP}"
+          mkdir -p "${SNAPSHOT_ROOT}"
+          cp -R dats "${SNAPSHOT_ROOT}/dats"
+          cp -R outs "${SNAPSHOT_ROOT}/outs"
+          (cd snps/weeklies && zip -rq "weekly-results-${RUN_STAMP}.zip" "${RUN_STAMP}")
+
       - name: Commit generated data and reports
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dats outs
+          git add dats outs snps
           if git diff --cached --quiet; then
             echo "No generated changes to commit."
           else
