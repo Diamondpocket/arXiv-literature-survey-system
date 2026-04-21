@@ -1,6 +1,6 @@
 # Trend Analysis
 
-Generated at: 2026-04-21T13:53:50.458275+00:00
+Generated at: 2026-04-21T14:46:39.709589+00:00
 Evidence base: 134 structured paper cards.
 
 ## 分布观察 Observed Distribution
