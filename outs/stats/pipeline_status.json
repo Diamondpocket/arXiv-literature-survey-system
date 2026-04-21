@@ -1,18 +1,18 @@
 {
-  "run_id": "20260421T130400Z",
+  "run_id": "20260421T135318Z",
   "topic": "Retrieval-Augmented Generation, RAG",
   "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
   "max_results": 10,
   "years": 2,
   "status": "completed",
   "current_stage": null,
-  "started_at": "2026-04-21T13:04:00.314304+00:00",
-  "updated_at": "2026-04-21T13:33:31.648247+00:00",
-  "finished_at": "2026-04-21T13:33:31.648247+00:00",
+  "started_at": "2026-04-21T13:53:18.252672+00:00",
+  "updated_at": "2026-04-21T13:53:52.961925+00:00",
+  "finished_at": "2026-04-21T13:53:52.961925+00:00",
   "message": "Pipeline finished successfully.",
   "recent_events": [
     {
-      "time": "2026-04-21T13:33:31.647486+00:00",
+      "time": "2026-04-21T13:53:52.960986+00:00",
       "stage_id": "weekly",
       "stage_label_zh": "生成周报",
       "stage_label_en": "Weekly Digest",
@@ -24,7 +24,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:20:45.011093+00:00",
+      "time": "2026-04-21T13:53:50.547198+00:00",
       "stage_id": "weekly",
       "stage_label_zh": "生成周报",
       "stage_label_en": "Weekly Digest",
@@ -32,7 +32,7 @@
       "payload": {}
     },
     {
-      "time": "2026-04-21T13:20:45.008860+00:00",
+      "time": "2026-04-21T13:53:50.544537+00:00",
       "stage_id": "analysis",
       "stage_label_zh": "聚类分析",
       "stage_label_en": "Cluster Analysis",
@@ -45,7 +45,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:04:02.498672+00:00",
+      "time": "2026-04-21T13:53:19.337907+00:00",
       "stage_id": "analysis",
       "stage_label_zh": "聚类分析",
       "stage_label_en": "Cluster Analysis",
@@ -53,7 +53,7 @@
       "payload": {}
     },
     {
-      "time": "2026-04-21T13:04:02.494205+00:00",
+      "time": "2026-04-21T13:53:19.332485+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
@@ -68,7 +68,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:04:02.488114+00:00",
+      "time": "2026-04-21T13:53:19.325946+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
@@ -82,7 +82,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:04:01.889226+00:00",
+      "time": "2026-04-21T13:53:18.858624+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
@@ -91,7 +91,7 @@
         "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
         "years": 2,
         "max_results": 10,
-        "cutoff": "2024-04-21T13:04:01.372615+00:00",
+        "cutoff": "2024-04-21T13:53:18.466268+00:00",
         "existing_in_window_before": 134,
         "fetched_count": 10,
         "saved_count": 134,
@@ -103,7 +103,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:04:01.883855+00:00",
+      "time": "2026-04-21T13:53:18.852850+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
@@ -113,7 +113,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:04:01.877743+00:00",
+      "time": "2026-04-21T13:53:18.845839+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
@@ -123,7 +123,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:04:01.876273+00:00",
+      "time": "2026-04-21T13:53:18.844150+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
@@ -133,7 +133,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:04:01.874787+00:00",
+      "time": "2026-04-21T13:53:18.842432+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
@@ -143,7 +143,7 @@
       }
     },
     {
-      "time": "2026-04-21T13:04:01.374519+00:00",
+      "time": "2026-04-21T13:53:18.468362+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
@@ -153,7 +153,7 @@
         "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
         "max_results": 10,
         "years": 2,
-        "cutoff": "2024-04-21T13:04:01.372615+00:00",
+        "cutoff": "2024-04-21T13:53:18.466268+00:00",
         "existing_in_window": 134,
         "message": "Started querying arXiv."
       }
@@ -161,6 +161,102 @@
   ],
   "recent_new_papers": [],
   "history_preview": [
+    {
+      "run_id": "20260421T135318Z",
+      "topic": "Retrieval-Augmented Generation, RAG",
+      "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
+      "max_results": 10,
+      "years": 2,
+      "status": "completed",
+      "message": "Pipeline finished successfully.",
+      "started_at": "2026-04-21T13:53:18.252672+00:00",
+      "finished_at": "2026-04-21T13:53:52.961925+00:00",
+      "updated_at": "2026-04-21T13:53:52.961925+00:00",
+      "fetch_stats": {
+        "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
+        "years": 2,
+        "max_results": 10,
+        "cutoff": "2024-04-21T13:53:18.466268+00:00",
+        "existing_in_window_before": 134,
+        "fetched_count": 10,
+        "saved_count": 134,
+        "new_count": 0,
+        "reused_count": 10,
+        "skipped_old_count": 0,
+        "new_papers_preview": [],
+        "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/raws/papers_raw.json"
+      },
+      "cards_stats": {
+        "existing_count_before": 134,
+        "candidate_count": 0,
+        "generated_count": 0,
+        "total_cards_after": 134,
+        "recent_cards_preview": [],
+        "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/cards/paper_cards.jsonl"
+      },
+      "analysis_stats": {
+        "taxonomy_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/taxons/taxonomy.md",
+        "comparison_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/tables/comparison_table.csv",
+        "trend_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/trends/trend_analysis.md",
+        "comparison_rows": 134
+      },
+      "weekly_stats": {
+        "latest_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/digests/weekly_digest_latest.md",
+        "archive_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/digests/weeklies/2026-04-21.md",
+        "digest_chars": 5090
+      },
+      "recent_new_papers": [],
+      "stage_statuses": [
+        {
+          "id": "fetch",
+          "label_zh": "抓取 arXiv",
+          "label_en": "Fetch arXiv",
+          "status": "completed",
+          "detail": "Saved 134 recent raw papers; new this run: 0.",
+          "started_at": "2026-04-21T13:53:18.253499+00:00",
+          "finished_at": "2026-04-21T13:53:18.861339+00:00",
+          "progress_current": 10,
+          "progress_total": 10,
+          "progress_percent": 100
+        },
+        {
+          "id": "cards",
+          "label_zh": "生成卡片",
+          "label_en": "Generate Cards",
+          "status": "completed",
+          "detail": "Structured cards available: 134. Newly generated: 0.",
+          "started_at": "2026-04-21T13:53:18.863372+00:00",
+          "finished_at": "2026-04-21T13:53:19.335350+00:00",
+          "progress_current": 0,
+          "progress_total": 0,
+          "progress_percent": 100
+        },
+        {
+          "id": "analysis",
+          "label_zh": "聚类分析",
+          "label_en": "Cluster Analysis",
+          "status": "completed",
+          "detail": "Analysis artifacts refreshed in outs/.",
+          "started_at": "2026-04-21T13:53:19.337049+00:00",
+          "finished_at": "2026-04-21T13:53:50.543682+00:00",
+          "progress_current": 3,
+          "progress_total": 3,
+          "progress_percent": 100
+        },
+        {
+          "id": "weekly",
+          "label_zh": "生成周报",
+          "label_en": "Weekly Digest",
+          "status": "completed",
+          "detail": "Weekly digest generated successfully.",
+          "started_at": "2026-04-21T13:53:50.546326+00:00",
+          "finished_at": "2026-04-21T13:53:52.960070+00:00",
+          "progress_current": 1,
+          "progress_total": 1,
+          "progress_percent": 100
+        }
+      ]
+    },
     {
       "run_id": "20260421T130400Z",
       "topic": "Retrieval-Augmented Generation, RAG",
@@ -536,7 +632,7 @@
       "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
       "years": 2,
       "max_results": 10,
-      "cutoff": "2024-04-21T13:04:01.372615+00:00",
+      "cutoff": "2024-04-21T13:53:18.466268+00:00",
       "existing_in_window_before": 134,
       "fetched_count": 10,
       "saved_count": 134,
@@ -572,8 +668,8 @@
       "label_zh": "抓取 arXiv",
       "label_en": "Fetch arXiv",
       "status": "completed",
-      "started_at": "2026-04-21T13:04:00.314988+00:00",
-      "finished_at": "2026-04-21T13:04:01.891655+00:00",
+      "started_at": "2026-04-21T13:53:18.253499+00:00",
+      "finished_at": "2026-04-21T13:53:18.861339+00:00",
       "detail": "Saved 134 recent raw papers; new this run: 0.",
       "progress_current": 10,
       "progress_total": 10,
@@ -584,8 +680,8 @@
       "label_zh": "生成卡片",
       "label_en": "Generate Cards",
       "status": "completed",
-      "started_at": "2026-04-21T13:04:01.893058+00:00",
-      "finished_at": "2026-04-21T13:04:02.496401+00:00",
+      "started_at": "2026-04-21T13:53:18.863372+00:00",
+      "finished_at": "2026-04-21T13:53:19.335350+00:00",
       "detail": "Structured cards available: 134. Newly generated: 0.",
       "progress_current": 0,
       "progress_total": 0,
@@ -596,8 +692,8 @@
       "label_zh": "聚类分析",
       "label_en": "Cluster Analysis",
       "status": "completed",
-      "started_at": "2026-04-21T13:04:02.497911+00:00",
-      "finished_at": "2026-04-21T13:20:45.008106+00:00",
+      "started_at": "2026-04-21T13:53:19.337049+00:00",
+      "finished_at": "2026-04-21T13:53:50.543682+00:00",
       "detail": "Analysis artifacts refreshed in outs/.",
       "progress_current": 3,
       "progress_total": 3,
@@ -608,8 +704,8 @@
       "label_zh": "生成周报",
       "label_en": "Weekly Digest",
       "status": "completed",
-      "started_at": "2026-04-21T13:20:45.010314+00:00",
-      "finished_at": "2026-04-21T13:33:31.646751+00:00",
+      "started_at": "2026-04-21T13:53:50.546326+00:00",
+      "finished_at": "2026-04-21T13:53:52.960070+00:00",
       "detail": "Weekly digest generated successfully.",
       "progress_current": 1,
       "progress_total": 1,
