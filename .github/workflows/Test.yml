@@ -1,0 +1,51 @@
+name: Weekly Literature Survey
+
+on:
+  schedule:
+    # Runs every Monday at 00:00 UTC, which is Monday 08:00 in Asia/Shanghai.
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+      LLM_TEMPERATURE: "1"
+      LLM_RETRY_ATTEMPTS: "4"
+      LLM_RETRY_BACKOFF_SECONDS: "5"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r cfgs/pkgs/requirements.txt
+
+      - name: Run weekly literature survey pipeline
+        run: python -m pkgs.surveys.clis.run --max_results 10 --card_limit 5
+
+      - name: Commit generated data and reports
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dats outs
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+          else
+            git commit -m "chore: update weekly literature survey"
+            git push
+          fi
