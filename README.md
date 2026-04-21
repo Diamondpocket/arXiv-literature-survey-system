@@ -1,9 +1,6 @@
 <<<<<<< HEAD
 # arXiv Literature Survey System
 
-=======
-# arXiv Literature Survey System  
->>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
 # arXiv 文献自动综述生成系统
 
 这是一个面向 `arXiv` 的自动化文献追踪与周报生成系统。  
@@ -200,7 +197,7 @@ http://127.0.0.1:8765
 
 - `outs/trends/trend_analysis.md`  
   趋势分析与研究空白 `trend analysis and research gaps`
->>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
+
 
 ### 周报 Weekly Digest
 
@@ -215,7 +212,7 @@ http://127.0.0.1:8765
 
 - `outs/digests/weeklies/YYYY-MM-DD.md`  
   历史周报归档 `historical weekly archives`
->>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
+
 
 ### 工作流状态 Workflow Monitoring
 
@@ -230,7 +227,7 @@ http://127.0.0.1:8765
 
 - `outs/stats/pipeline_history.json`  
   历史运行记录 `historical run records`
->>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
+
 
 ---
 
@@ -325,4 +322,4 @@ http://127.0.0.1:8765
 
 这个项目不是“让 AI 直接写综述”，而是“让 AI 参与一个可审计、可追踪、可增量更新的文献知识流水线”。  
 This project is not about asking AI to directly write a survey, but about using AI inside an auditable, traceable, incrementally updated literature knowledge pipeline.
->>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
+
