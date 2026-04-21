@@ -1,18 +1,18 @@
 {
-  "run_id": "20260421T161607Z",
+  "run_id": "20260421T163354Z",
   "topic": "Retrieval-Augmented Generation, RAG",
   "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
   "max_results": 10,
   "years": 2,
   "status": "completed",
   "current_stage": null,
-  "started_at": "2026-04-21T16:16:07.426433+00:00",
-  "updated_at": "2026-04-21T16:16:51.029367+00:00",
-  "finished_at": "2026-04-21T16:16:51.029367+00:00",
+  "started_at": "2026-04-21T16:33:54.033984+00:00",
+  "updated_at": "2026-04-21T16:34:45.682320+00:00",
+  "finished_at": "2026-04-21T16:34:45.682320+00:00",
   "message": "Pipeline finished successfully.",
   "recent_events": [
     {
-      "time": "2026-04-21T16:16:51.028456+00:00",
+      "time": "2026-04-21T16:34:45.681296+00:00",
       "stage_id": "weekly",
       "stage_label_zh": "生成周报",
       "stage_label_en": "Weekly Digest",
@@ -20,11 +20,11 @@
       "payload": {
         "latest_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/digests/weekly_digest_latest.md",
         "archive_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/digests/weeklies/2026-04-21.md",
-        "digest_chars": 1677
+        "digest_chars": 1824
       }
     },
     {
-      "time": "2026-04-21T16:16:39.394960+00:00",
+      "time": "2026-04-21T16:34:28.083129+00:00",
       "stage_id": "weekly",
       "stage_label_zh": "生成周报",
       "stage_label_en": "Weekly Digest",
@@ -32,7 +32,7 @@
       "payload": {}
     },
     {
-      "time": "2026-04-21T16:16:39.392216+00:00",
+      "time": "2026-04-21T16:34:28.080174+00:00",
       "stage_id": "analysis",
       "stage_label_zh": "聚类分析",
       "stage_label_en": "Cluster Analysis",
@@ -41,11 +41,11 @@
         "taxonomy_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/taxons/taxonomy.md",
         "comparison_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/tables/comparison_table.csv",
         "trend_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/trends/trend_analysis.md",
-        "comparison_rows": 5
+        "comparison_rows": 10
       }
     },
     {
-      "time": "2026-04-21T16:16:31.384733+00:00",
+      "time": "2026-04-21T16:34:18.380931+00:00",
       "stage_id": "analysis",
       "stage_label_zh": "聚类分析",
       "stage_label_en": "Cluster Analysis",
@@ -53,458 +53,203 @@
       "payload": {}
     },
     {
-      "time": "2026-04-21T16:16:31.378669+00:00",
+      "time": "2026-04-21T16:34:18.376077+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
-      "message": "Saved 5 cards. Newly generated this run: 5.",
+      "message": "Saved 10 cards. Newly generated this run: 5.",
       "payload": {
-        "existing_count_before": 0,
+        "existing_count_before": 5,
         "candidate_count": 5,
         "generated_count": 5,
-        "total_cards_after": 5,
+        "total_cards_after": 10,
         "recent_cards_preview": [
           {
-            "arxiv_id": "2604.18584v1",
-            "title": "MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
-            "published": "2026-04-20T17:59:49+00:00",
+            "arxiv_id": "2604.18234v1",
+            "title": "Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
+            "published": "2026-04-20T13:20:57+00:00",
             "confidence_level": "high",
             "best_fit_category": "Evaluation, Benchmarks, and Diagnostics"
           },
           {
-            "arxiv_id": "2604.18509v1",
-            "title": "MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
-            "published": "2026-04-20T17:00:38+00:00",
+            "arxiv_id": "2604.18105v1",
+            "title": "NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
+            "published": "2026-04-20T11:21:06+00:00",
             "confidence_level": "high",
-            "best_fit_category": "Agentic and Multi-Agent RAG"
+            "best_fit_category": "Efficiency, Deployment, and On-Device RAG"
           },
           {
-            "arxiv_id": "2604.18478v1",
-            "title": "WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
-            "published": "2026-04-20T16:30:53+00:00",
+            "arxiv_id": "2604.17979v1",
+            "title": "Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
+            "published": "2026-04-20T08:59:41+00:00",
             "confidence_level": "high",
-            "best_fit_category": "Core Retrieval and Ranking Methods"
+            "best_fit_category": "Domain-Specific RAG Applications"
           },
           {
-            "arxiv_id": "2604.18362v1",
-            "title": "ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
-            "published": "2026-04-20T14:51:43+00:00",
+            "arxiv_id": "2604.17948v1",
+            "title": "RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
+            "published": "2026-04-20T08:29:48+00:00",
             "confidence_level": "high",
-            "best_fit_category": "Reliability, Safety, Privacy, and Security"
+            "best_fit_category": "Domain-Specific RAG Applications"
           },
           {
-            "arxiv_id": "2604.18257v1",
-            "title": "DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
-            "published": "2026-04-20T13:30:45+00:00",
+            "arxiv_id": "2604.17889v1",
+            "title": "AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
+            "published": "2026-04-20T07:02:10+00:00",
             "confidence_level": "high",
-            "best_fit_category": "Core Retrieval and Ranking Methods"
+            "best_fit_category": "Multimodal and Visual RAG"
           }
         ],
         "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/cards/paper_cards.jsonl"
       }
     },
     {
-      "time": "2026-04-21T16:16:31.375617+00:00",
+      "time": "2026-04-21T16:34:18.372761+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
-      "message": "卡片生成完成：DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
+      "message": "卡片生成完成：AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
       "payload": {
-        "arxiv_id": "2604.18257v1",
-        "title": "DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
-        "published": "2026-04-20T13:30:45+00:00",
+        "arxiv_id": "2604.17889v1",
+        "title": "AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
+        "published": "2026-04-20T07:02:10+00:00",
         "confidence_level": "high",
-        "best_fit_category": "Core Retrieval and Ranking Methods"
+        "best_fit_category": "Multimodal and Visual RAG"
       }
     },
     {
-      "time": "2026-04-21T16:16:25.018274+00:00",
+      "time": "2026-04-21T16:34:11.701123+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
-      "message": "卡片生成完成：ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
+      "message": "卡片生成完成：RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
       "payload": {
-        "arxiv_id": "2604.18362v1",
-        "title": "ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
-        "published": "2026-04-20T14:51:43+00:00",
+        "arxiv_id": "2604.17948v1",
+        "title": "RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
+        "published": "2026-04-20T08:29:48+00:00",
         "confidence_level": "high",
-        "best_fit_category": "Reliability, Safety, Privacy, and Security"
+        "best_fit_category": "Domain-Specific RAG Applications"
       }
     },
     {
-      "time": "2026-04-21T16:16:21.334710+00:00",
+      "time": "2026-04-21T16:34:07.044565+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
-      "message": "卡片生成完成：WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
+      "message": "卡片生成完成：Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
       "payload": {
-        "arxiv_id": "2604.18478v1",
-        "title": "WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
-        "published": "2026-04-20T16:30:53+00:00",
+        "arxiv_id": "2604.17979v1",
+        "title": "Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
+        "published": "2026-04-20T08:59:41+00:00",
         "confidence_level": "high",
-        "best_fit_category": "Core Retrieval and Ranking Methods"
+        "best_fit_category": "Domain-Specific RAG Applications"
       }
     },
     {
-      "time": "2026-04-21T16:16:16.971795+00:00",
+      "time": "2026-04-21T16:34:03.538088+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
-      "message": "卡片生成完成：MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
+      "message": "卡片生成完成：NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
       "payload": {
-        "arxiv_id": "2604.18509v1",
-        "title": "MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
-        "published": "2026-04-20T17:00:38+00:00",
+        "arxiv_id": "2604.18105v1",
+        "title": "NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
+        "published": "2026-04-20T11:21:06+00:00",
         "confidence_level": "high",
-        "best_fit_category": "Agentic and Multi-Agent RAG"
+        "best_fit_category": "Efficiency, Deployment, and On-Device RAG"
       }
     },
     {
-      "time": "2026-04-21T16:16:14.528482+00:00",
+      "time": "2026-04-21T16:33:59.394533+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
-      "message": "卡片生成完成：MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
+      "message": "卡片生成完成：Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
       "payload": {
-        "arxiv_id": "2604.18584v1",
-        "title": "MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
-        "published": "2026-04-20T17:59:49+00:00",
+        "arxiv_id": "2604.18234v1",
+        "title": "Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
+        "published": "2026-04-20T13:20:57+00:00",
         "confidence_level": "high",
         "best_fit_category": "Evaluation, Benchmarks, and Diagnostics"
       }
     },
     {
-      "time": "2026-04-21T16:16:09.627645+00:00",
+      "time": "2026-04-21T16:33:55.021809+00:00",
       "stage_id": "cards",
       "stage_label_zh": "生成卡片",
       "stage_label_en": "Generate Cards",
       "message": "Preparing to generate 5 new paper cards.",
       "payload": {
         "event": "start",
-        "existing_count": 0,
+        "existing_count": 5,
         "candidate_count": 5,
         "batch_size": 1,
         "message": "Preparing to generate 5 new paper cards."
       }
     },
     {
-      "time": "2026-04-21T16:16:09.182340+00:00",
+      "time": "2026-04-21T16:33:54.577143+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
-      "message": "Saved 10 unique papers. New this run: 10.",
+      "message": "Saved 10 unique papers. New this run: 0.",
       "payload": {
         "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
         "years": 2,
         "max_results": 10,
-        "cutoff": "2024-04-21T16:16:08.903157+00:00",
-        "existing_in_window_before": 0,
+        "cutoff": "2024-04-21T16:33:54.266649+00:00",
+        "existing_in_window_before": 10,
         "fetched_count": 10,
         "saved_count": 10,
-        "new_count": 10,
-        "reused_count": 0,
+        "new_count": 0,
+        "reused_count": 10,
         "skipped_old_count": 0,
-        "new_papers_preview": [
-          {
-            "arxiv_id": "2604.18584v1",
-            "title": "MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
-            "published": "2026-04-20T17:59:49+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.18584v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.18584v1",
-            "categories": [
-              "cs.AI",
-              "cs.DL",
-              "cs.IR",
-              "cs.LG"
-            ]
-          },
-          {
-            "arxiv_id": "2604.18509v1",
-            "title": "MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
-            "published": "2026-04-20T17:00:38+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.18509v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.18509v1",
-            "categories": [
-              "cs.CL"
-            ]
-          },
-          {
-            "arxiv_id": "2604.18478v1",
-            "title": "WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
-            "published": "2026-04-20T16:30:53+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.18478v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.18478v1",
-            "categories": [
-              "cs.AI",
-              "cs.CL"
-            ]
-          },
-          {
-            "arxiv_id": "2604.18362v1",
-            "title": "ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
-            "published": "2026-04-20T14:51:43+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.18362v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.18362v1",
-            "categories": [
-              "cs.CL",
-              "cs.IR"
-            ]
-          },
-          {
-            "arxiv_id": "2604.18257v1",
-            "title": "DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
-            "published": "2026-04-20T13:30:45+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.18257v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.18257v1",
-            "categories": [
-              "cs.IR",
-              "cs.AI",
-              "cs.CL"
-            ]
-          },
-          {
-            "arxiv_id": "2604.18234v1",
-            "title": "Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
-            "published": "2026-04-20T13:20:57+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.18234v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.18234v1",
-            "categories": [
-              "cs.IR",
-              "cs.AI"
-            ]
-          },
-          {
-            "arxiv_id": "2604.18105v1",
-            "title": "NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
-            "published": "2026-04-20T11:21:06+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.18105v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.18105v1",
-            "categories": [
-              "eess.AS",
-              "cs.CL",
-              "cs.SD"
-            ]
-          },
-          {
-            "arxiv_id": "2604.17979v1",
-            "title": "Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
-            "published": "2026-04-20T08:59:41+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.17979v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.17979v1",
-            "categories": [
-              "cs.IR"
-            ]
-          },
-          {
-            "arxiv_id": "2604.17948v1",
-            "title": "RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
-            "published": "2026-04-20T08:29:48+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.17948v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.17948v1",
-            "categories": [
-              "cs.CR",
-              "cs.AI",
-              "cs.MA"
-            ]
-          },
-          {
-            "arxiv_id": "2604.17889v1",
-            "title": "AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
-            "published": "2026-04-20T07:02:10+00:00",
-            "entry_url": "http://arxiv.org/abs/2604.17889v1",
-            "pdf_url": "https://arxiv.org/pdf/2604.17889v1",
-            "categories": [
-              "cs.CV"
-            ]
-          }
-        ],
+        "new_papers_preview": [],
         "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/raws/papers_raw.json"
       }
     },
     {
-      "time": "2026-04-21T16:16:09.180256+00:00",
+      "time": "2026-04-21T16:33:54.574427+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
+      "message": "已扫描 10/10 篇候选论文；新增 0，已有 10。",
       "payload": {
-        "arxiv_id": "2604.17889v1",
-        "title": "AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
-        "published": "2026-04-20T07:02:10+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.17889v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.17889v1",
-        "categories": [
-          "cs.CV"
-        ]
+        "checkpoint": true
       }
     },
     {
-      "time": "2026-04-21T16:16:09.179234+00:00",
+      "time": "2026-04-21T16:33:54.567860+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
+      "message": "已扫描 3/10 篇候选论文；新增 0，已有 3。",
       "payload": {
-        "arxiv_id": "2604.17948v1",
-        "title": "RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
-        "published": "2026-04-20T08:29:48+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.17948v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.17948v1",
-        "categories": [
-          "cs.CR",
-          "cs.AI",
-          "cs.MA"
-        ]
+        "checkpoint": true
       }
     },
     {
-      "time": "2026-04-21T16:16:09.178239+00:00",
+      "time": "2026-04-21T16:33:54.566301+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
+      "message": "已扫描 2/10 篇候选论文；新增 0，已有 2。",
       "payload": {
-        "arxiv_id": "2604.17979v1",
-        "title": "Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
-        "published": "2026-04-20T08:59:41+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.17979v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.17979v1",
-        "categories": [
-          "cs.IR"
-        ]
+        "checkpoint": true
       }
     },
     {
-      "time": "2026-04-21T16:16:09.177280+00:00",
+      "time": "2026-04-21T16:33:54.564717+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
+      "message": "已扫描 1/10 篇候选论文；新增 0，已有 1。",
       "payload": {
-        "arxiv_id": "2604.18105v1",
-        "title": "NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
-        "published": "2026-04-20T11:21:06+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.18105v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.18105v1",
-        "categories": [
-          "eess.AS",
-          "cs.CL",
-          "cs.SD"
-        ]
+        "checkpoint": true
       }
     },
     {
-      "time": "2026-04-21T16:16:09.176361+00:00",
-      "stage_id": "fetch",
-      "stage_label_zh": "抓取 arXiv",
-      "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
-      "payload": {
-        "arxiv_id": "2604.18234v1",
-        "title": "Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
-        "published": "2026-04-20T13:20:57+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.18234v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.18234v1",
-        "categories": [
-          "cs.IR",
-          "cs.AI"
-        ]
-      }
-    },
-    {
-      "time": "2026-04-21T16:16:09.175439+00:00",
-      "stage_id": "fetch",
-      "stage_label_zh": "抓取 arXiv",
-      "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
-      "payload": {
-        "arxiv_id": "2604.18257v1",
-        "title": "DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
-        "published": "2026-04-20T13:30:45+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.18257v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.18257v1",
-        "categories": [
-          "cs.IR",
-          "cs.AI",
-          "cs.CL"
-        ]
-      }
-    },
-    {
-      "time": "2026-04-21T16:16:09.174643+00:00",
-      "stage_id": "fetch",
-      "stage_label_zh": "抓取 arXiv",
-      "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
-      "payload": {
-        "arxiv_id": "2604.18362v1",
-        "title": "ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
-        "published": "2026-04-20T14:51:43+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.18362v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.18362v1",
-        "categories": [
-          "cs.CL",
-          "cs.IR"
-        ]
-      }
-    },
-    {
-      "time": "2026-04-21T16:16:09.173866+00:00",
-      "stage_id": "fetch",
-      "stage_label_zh": "抓取 arXiv",
-      "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
-      "payload": {
-        "arxiv_id": "2604.18478v1",
-        "title": "WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
-        "published": "2026-04-20T16:30:53+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.18478v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.18478v1",
-        "categories": [
-          "cs.AI",
-          "cs.CL"
-        ]
-      }
-    },
-    {
-      "time": "2026-04-21T16:16:09.173123+00:00",
-      "stage_id": "fetch",
-      "stage_label_zh": "抓取 arXiv",
-      "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
-      "payload": {
-        "arxiv_id": "2604.18509v1",
-        "title": "MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
-        "published": "2026-04-20T17:00:38+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.18509v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.18509v1",
-        "categories": [
-          "cs.CL"
-        ]
-      }
-    },
-    {
-      "time": "2026-04-21T16:16:09.172388+00:00",
-      "stage_id": "fetch",
-      "stage_label_zh": "抓取 arXiv",
-      "stage_label_en": "Fetch arXiv",
-      "message": "发现新论文：MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
-      "payload": {
-        "arxiv_id": "2604.18584v1",
-        "title": "MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
-        "published": "2026-04-20T17:59:49+00:00",
-        "entry_url": "http://arxiv.org/abs/2604.18584v1",
-        "pdf_url": "https://arxiv.org/pdf/2604.18584v1",
-        "categories": [
-          "cs.AI",
-          "cs.DL",
-          "cs.IR",
-          "cs.LG"
-        ]
-      }
-    },
-    {
-      "time": "2026-04-21T16:16:08.903478+00:00",
+      "time": "2026-04-21T16:33:54.267680+00:00",
       "stage_id": "fetch",
       "stage_label_zh": "抓取 arXiv",
       "stage_label_en": "Fetch arXiv",
@@ -514,127 +259,146 @@
         "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
         "max_results": 10,
         "years": 2,
-        "cutoff": "2024-04-21T16:16:08.903157+00:00",
-        "existing_in_window": 0,
+        "cutoff": "2024-04-21T16:33:54.266649+00:00",
+        "existing_in_window": 10,
         "message": "Started querying arXiv."
       }
     }
   ],
-  "recent_new_papers": [
-    {
-      "arxiv_id": "2604.18584v1",
-      "title": "MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
-      "published": "2026-04-20T17:59:49+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.18584v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.18584v1",
-      "categories": [
-        "cs.AI",
-        "cs.DL",
-        "cs.IR",
-        "cs.LG"
-      ]
-    },
-    {
-      "arxiv_id": "2604.18509v1",
-      "title": "MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
-      "published": "2026-04-20T17:00:38+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.18509v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.18509v1",
-      "categories": [
-        "cs.CL"
-      ]
-    },
-    {
-      "arxiv_id": "2604.18478v1",
-      "title": "WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
-      "published": "2026-04-20T16:30:53+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.18478v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.18478v1",
-      "categories": [
-        "cs.AI",
-        "cs.CL"
-      ]
-    },
-    {
-      "arxiv_id": "2604.18362v1",
-      "title": "ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
-      "published": "2026-04-20T14:51:43+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.18362v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.18362v1",
-      "categories": [
-        "cs.CL",
-        "cs.IR"
-      ]
-    },
-    {
-      "arxiv_id": "2604.18257v1",
-      "title": "DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
-      "published": "2026-04-20T13:30:45+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.18257v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.18257v1",
-      "categories": [
-        "cs.IR",
-        "cs.AI",
-        "cs.CL"
-      ]
-    },
-    {
-      "arxiv_id": "2604.18234v1",
-      "title": "Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
-      "published": "2026-04-20T13:20:57+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.18234v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.18234v1",
-      "categories": [
-        "cs.IR",
-        "cs.AI"
-      ]
-    },
-    {
-      "arxiv_id": "2604.18105v1",
-      "title": "NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
-      "published": "2026-04-20T11:21:06+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.18105v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.18105v1",
-      "categories": [
-        "eess.AS",
-        "cs.CL",
-        "cs.SD"
-      ]
-    },
-    {
-      "arxiv_id": "2604.17979v1",
-      "title": "Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
-      "published": "2026-04-20T08:59:41+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.17979v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.17979v1",
-      "categories": [
-        "cs.IR"
-      ]
-    },
-    {
-      "arxiv_id": "2604.17948v1",
-      "title": "RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
-      "published": "2026-04-20T08:29:48+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.17948v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.17948v1",
-      "categories": [
-        "cs.CR",
-        "cs.AI",
-        "cs.MA"
-      ]
-    },
-    {
-      "arxiv_id": "2604.17889v1",
-      "title": "AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
-      "published": "2026-04-20T07:02:10+00:00",
-      "entry_url": "http://arxiv.org/abs/2604.17889v1",
-      "pdf_url": "https://arxiv.org/pdf/2604.17889v1",
-      "categories": [
-        "cs.CV"
-      ]
-    }
-  ],
+  "recent_new_papers": [],
   "history_preview": [
+    {
+      "run_id": "20260421T163354Z",
+      "topic": "Retrieval-Augmented Generation, RAG",
+      "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
+      "max_results": 10,
+      "years": 2,
+      "status": "completed",
+      "message": "Pipeline finished successfully.",
+      "started_at": "2026-04-21T16:33:54.033984+00:00",
+      "finished_at": "2026-04-21T16:34:45.682320+00:00",
+      "updated_at": "2026-04-21T16:34:45.682320+00:00",
+      "fetch_stats": {
+        "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
+        "years": 2,
+        "max_results": 10,
+        "cutoff": "2024-04-21T16:33:54.266649+00:00",
+        "existing_in_window_before": 10,
+        "fetched_count": 10,
+        "saved_count": 10,
+        "new_count": 0,
+        "reused_count": 10,
+        "skipped_old_count": 0,
+        "new_papers_preview": [],
+        "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/raws/papers_raw.json"
+      },
+      "cards_stats": {
+        "existing_count_before": 5,
+        "candidate_count": 5,
+        "generated_count": 5,
+        "total_cards_after": 10,
+        "recent_cards_preview": [
+          {
+            "arxiv_id": "2604.18234v1",
+            "title": "Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
+            "published": "2026-04-20T13:20:57+00:00",
+            "confidence_level": "high",
+            "best_fit_category": "Evaluation, Benchmarks, and Diagnostics"
+          },
+          {
+            "arxiv_id": "2604.18105v1",
+            "title": "NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
+            "published": "2026-04-20T11:21:06+00:00",
+            "confidence_level": "high",
+            "best_fit_category": "Efficiency, Deployment, and On-Device RAG"
+          },
+          {
+            "arxiv_id": "2604.17979v1",
+            "title": "Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
+            "published": "2026-04-20T08:59:41+00:00",
+            "confidence_level": "high",
+            "best_fit_category": "Domain-Specific RAG Applications"
+          },
+          {
+            "arxiv_id": "2604.17948v1",
+            "title": "RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
+            "published": "2026-04-20T08:29:48+00:00",
+            "confidence_level": "high",
+            "best_fit_category": "Domain-Specific RAG Applications"
+          },
+          {
+            "arxiv_id": "2604.17889v1",
+            "title": "AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
+            "published": "2026-04-20T07:02:10+00:00",
+            "confidence_level": "high",
+            "best_fit_category": "Multimodal and Visual RAG"
+          }
+        ],
+        "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/cards/paper_cards.jsonl"
+      },
+      "analysis_stats": {
+        "taxonomy_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/taxons/taxonomy.md",
+        "comparison_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/tables/comparison_table.csv",
+        "trend_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/trends/trend_analysis.md",
+        "comparison_rows": 10
+      },
+      "weekly_stats": {
+        "latest_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/digests/weekly_digest_latest.md",
+        "archive_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/digests/weeklies/2026-04-21.md",
+        "digest_chars": 1824
+      },
+      "recent_new_papers": [],
+      "stage_statuses": [
+        {
+          "id": "fetch",
+          "label_zh": "抓取 arXiv",
+          "label_en": "Fetch arXiv",
+          "status": "completed",
+          "detail": "Saved 10 recent raw papers; new this run: 0.",
+          "started_at": "2026-04-21T16:33:54.034716+00:00",
+          "finished_at": "2026-04-21T16:33:54.580322+00:00",
+          "progress_current": 10,
+          "progress_total": 10,
+          "progress_percent": 100
+        },
+        {
+          "id": "cards",
+          "label_zh": "生成卡片",
+          "label_en": "Generate Cards",
+          "status": "completed",
+          "detail": "Structured cards available: 10. Newly generated: 5.",
+          "started_at": "2026-04-21T16:33:54.582878+00:00",
+          "finished_at": "2026-04-21T16:34:18.378064+00:00",
+          "progress_current": 5,
+          "progress_total": 5,
+          "progress_percent": 100
+        },
+        {
+          "id": "analysis",
+          "label_zh": "聚类分析",
+          "label_en": "Cluster Analysis",
+          "status": "completed",
+          "detail": "Analysis artifacts refreshed in outs/.",
+          "started_at": "2026-04-21T16:34:18.379968+00:00",
+          "finished_at": "2026-04-21T16:34:28.079153+00:00",
+          "progress_current": 3,
+          "progress_total": 3,
+          "progress_percent": 100
+        },
+        {
+          "id": "weekly",
+          "label_zh": "生成周报",
+          "label_en": "Weekly Digest",
+          "status": "completed",
+          "detail": "Weekly digest generated successfully.",
+          "started_at": "2026-04-21T16:34:28.082161+00:00",
+          "finished_at": "2026-04-21T16:34:45.680268+00:00",
+          "progress_current": 1,
+          "progress_total": 1,
+          "progress_percent": 100
+        }
+      ]
+    },
     {
       "run_id": "20260421T161607Z",
       "topic": "Retrieval-Augmented Generation, RAG",
@@ -999,169 +763,56 @@
       "query": "abs:\"retrieval augmented generation\" OR abs:\"retrieval-augmented generation\" OR ti:\"retrieval augmented generation\" OR ti:\"retrieval-augmented generation\"",
       "years": 2,
       "max_results": 10,
-      "cutoff": "2024-04-21T16:16:08.903157+00:00",
-      "existing_in_window_before": 0,
+      "cutoff": "2024-04-21T16:33:54.266649+00:00",
+      "existing_in_window_before": 10,
       "fetched_count": 10,
       "saved_count": 10,
-      "new_count": 10,
-      "reused_count": 0,
+      "new_count": 0,
+      "reused_count": 10,
       "skipped_old_count": 0,
-      "new_papers_preview": [
-        {
-          "arxiv_id": "2604.18584v1",
-          "title": "MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
-          "published": "2026-04-20T17:59:49+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.18584v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.18584v1",
-          "categories": [
-            "cs.AI",
-            "cs.DL",
-            "cs.IR",
-            "cs.LG"
-          ]
-        },
-        {
-          "arxiv_id": "2604.18509v1",
-          "title": "MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
-          "published": "2026-04-20T17:00:38+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.18509v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.18509v1",
-          "categories": [
-            "cs.CL"
-          ]
-        },
-        {
-          "arxiv_id": "2604.18478v1",
-          "title": "WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
-          "published": "2026-04-20T16:30:53+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.18478v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.18478v1",
-          "categories": [
-            "cs.AI",
-            "cs.CL"
-          ]
-        },
-        {
-          "arxiv_id": "2604.18362v1",
-          "title": "ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
-          "published": "2026-04-20T14:51:43+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.18362v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.18362v1",
-          "categories": [
-            "cs.CL",
-            "cs.IR"
-          ]
-        },
-        {
-          "arxiv_id": "2604.18257v1",
-          "title": "DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
-          "published": "2026-04-20T13:30:45+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.18257v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.18257v1",
-          "categories": [
-            "cs.IR",
-            "cs.AI",
-            "cs.CL"
-          ]
-        },
+      "new_papers_preview": [],
+      "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/raws/papers_raw.json"
+    },
+    "cards": {
+      "existing_count_before": 5,
+      "candidate_count": 5,
+      "generated_count": 5,
+      "total_cards_after": 10,
+      "recent_cards_preview": [
         {
           "arxiv_id": "2604.18234v1",
           "title": "Evaluating Multi-Hop Reasoning in RAG Systems: A Comparison of LLM-Based Retriever Evaluation Strategies",
           "published": "2026-04-20T13:20:57+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.18234v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.18234v1",
-          "categories": [
-            "cs.IR",
-            "cs.AI"
-          ]
+          "confidence_level": "high",
+          "best_fit_category": "Evaluation, Benchmarks, and Diagnostics"
         },
         {
           "arxiv_id": "2604.18105v1",
           "title": "NIM4-ASR: Towards Efficient, Robust, and Customizable Real-Time LLM-Based ASR",
           "published": "2026-04-20T11:21:06+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.18105v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.18105v1",
-          "categories": [
-            "eess.AS",
-            "cs.CL",
-            "cs.SD"
-          ]
+          "confidence_level": "high",
+          "best_fit_category": "Efficiency, Deployment, and On-Device RAG"
         },
         {
           "arxiv_id": "2604.17979v1",
           "title": "Architecture Matters More Than Scale: A Comparative Study of Retrieval and Memory Augmentation for Financial QA Under SME Compute Constraints",
           "published": "2026-04-20T08:59:41+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.17979v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.17979v1",
-          "categories": [
-            "cs.IR"
-          ]
+          "confidence_level": "high",
+          "best_fit_category": "Domain-Specific RAG Applications"
         },
         {
           "arxiv_id": "2604.17948v1",
           "title": "RAVEN: Retrieval-Augmented Vulnerability Exploration Network for Memory Corruption Analysis in User Code and Binary Programs",
           "published": "2026-04-20T08:29:48+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.17948v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.17948v1",
-          "categories": [
-            "cs.CR",
-            "cs.AI",
-            "cs.MA"
-          ]
+          "confidence_level": "high",
+          "best_fit_category": "Domain-Specific RAG Applications"
         },
         {
           "arxiv_id": "2604.17889v1",
           "title": "AeroRAG: Structured Multimodal Retrieval-Augmented LLM for Fine-Grained Aerial Visual Reasoning",
           "published": "2026-04-20T07:02:10+00:00",
-          "entry_url": "http://arxiv.org/abs/2604.17889v1",
-          "pdf_url": "https://arxiv.org/pdf/2604.17889v1",
-          "categories": [
-            "cs.CV"
-          ]
-        }
-      ],
-      "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/raws/papers_raw.json"
-    },
-    "cards": {
-      "existing_count_before": 0,
-      "candidate_count": 5,
-      "generated_count": 5,
-      "total_cards_after": 5,
-      "recent_cards_preview": [
-        {
-          "arxiv_id": "2604.18584v1",
-          "title": "MathNet: a Global Multimodal Benchmark for Mathematical Reasoning and Retrieval",
-          "published": "2026-04-20T17:59:49+00:00",
           "confidence_level": "high",
-          "best_fit_category": "Evaluation, Benchmarks, and Diagnostics"
-        },
-        {
-          "arxiv_id": "2604.18509v1",
-          "title": "MASS-RAG: Multi-Agent Synthesis Retrieval-Augmented Generation",
-          "published": "2026-04-20T17:00:38+00:00",
-          "confidence_level": "high",
-          "best_fit_category": "Agentic and Multi-Agent RAG"
-        },
-        {
-          "arxiv_id": "2604.18478v1",
-          "title": "WorldDB: A Vector Graph-of-Worlds Memory Engine with Ontology-Aware Write-Time Reconciliation",
-          "published": "2026-04-20T16:30:53+00:00",
-          "confidence_level": "high",
-          "best_fit_category": "Core Retrieval and Ranking Methods"
-        },
-        {
-          "arxiv_id": "2604.18362v1",
-          "title": "ArbGraph: Conflict-Aware Evidence Arbitration for Reliable Long-Form Retrieval-Augmented Generation",
-          "published": "2026-04-20T14:51:43+00:00",
-          "confidence_level": "high",
-          "best_fit_category": "Reliability, Safety, Privacy, and Security"
-        },
-        {
-          "arxiv_id": "2604.18257v1",
-          "title": "DocQAC: Adaptive Trie-Guided Decoding for Effective In-Document Query Auto-Completion",
-          "published": "2026-04-20T13:30:45+00:00",
-          "confidence_level": "high",
-          "best_fit_category": "Core Retrieval and Ranking Methods"
+          "best_fit_category": "Multimodal and Visual RAG"
         }
       ],
       "output_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/dats/cards/paper_cards.jsonl"
@@ -1170,12 +821,12 @@
       "taxonomy_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/taxons/taxonomy.md",
       "comparison_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/tables/comparison_table.csv",
       "trend_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/trends/trend_analysis.md",
-      "comparison_rows": 5
+      "comparison_rows": 10
     },
     "weekly": {
       "latest_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/digests/weekly_digest_latest.md",
       "archive_path": "/home/runner/work/arXiv-literature-survey-system/arXiv-literature-survey-system/outs/digests/weeklies/2026-04-21.md",
-      "digest_chars": 1677
+      "digest_chars": 1824
     }
   },
   "stages": [
@@ -1184,9 +835,9 @@
       "label_zh": "抓取 arXiv",
       "label_en": "Fetch arXiv",
       "status": "completed",
-      "started_at": "2026-04-21T16:16:07.426723+00:00",
-      "finished_at": "2026-04-21T16:16:09.184732+00:00",
-      "detail": "Saved 10 recent raw papers; new this run: 10.",
+      "started_at": "2026-04-21T16:33:54.034716+00:00",
+      "finished_at": "2026-04-21T16:33:54.580322+00:00",
+      "detail": "Saved 10 recent raw papers; new this run: 0.",
       "progress_current": 10,
       "progress_total": 10,
       "progress_percent": 100
@@ -1196,9 +847,9 @@
       "label_zh": "生成卡片",
       "label_en": "Generate Cards",
       "status": "completed",
-      "started_at": "2026-04-21T16:16:09.186150+00:00",
-      "finished_at": "2026-04-21T16:16:31.381639+00:00",
-      "detail": "Structured cards available: 5. Newly generated: 5.",
+      "started_at": "2026-04-21T16:33:54.582878+00:00",
+      "finished_at": "2026-04-21T16:34:18.378064+00:00",
+      "detail": "Structured cards available: 10. Newly generated: 5.",
       "progress_current": 5,
       "progress_total": 5,
       "progress_percent": 100
@@ -1208,8 +859,8 @@
       "label_zh": "聚类分析",
       "label_en": "Cluster Analysis",
       "status": "completed",
-      "started_at": "2026-04-21T16:16:31.383839+00:00",
-      "finished_at": "2026-04-21T16:16:39.391287+00:00",
+      "started_at": "2026-04-21T16:34:18.379968+00:00",
+      "finished_at": "2026-04-21T16:34:28.079153+00:00",
       "detail": "Analysis artifacts refreshed in outs/.",
       "progress_current": 3,
       "progress_total": 3,
@@ -1220,8 +871,8 @@
       "label_zh": "生成周报",
       "label_en": "Weekly Digest",
       "status": "completed",
-      "started_at": "2026-04-21T16:16:39.394051+00:00",
-      "finished_at": "2026-04-21T16:16:51.027517+00:00",
+      "started_at": "2026-04-21T16:34:28.082161+00:00",
+      "finished_at": "2026-04-21T16:34:45.680268+00:00",
       "detail": "Weekly digest generated successfully.",
       "progress_current": 1,
       "progress_total": 1,
