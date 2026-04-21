@@ -51,6 +51,10 @@ RELEASES_DIR = ARTS_DIR / "releases"
 DOCS_DIR = ROOT_DIR / "docs"
 READMES_DIR = DOCS_DIR / "readmes"
 
+SNPS_DIR = ROOT_DIR / "snps"
+WEEKLY_SNPS_DIR = SNPS_DIR / "weeklies"
+IMPORTS_DIR = SNPS_DIR / "imports"
+
 TLS_DIR = ROOT_DIR / "tls"
 BUILD_TLS_DIR = TLS_DIR / "builds"
 
@@ -67,3 +71,11 @@ def runtime_dats_dir() -> Path:
 def runtime_outs_dir() -> Path:
     candidate = RUNTIMES_DIR / "outs"
     return candidate if candidate.exists() else BUNDLES_DIR / "outs"
+
+
+def runtime_snps_dir() -> Path:
+    return RUNTIMES_DIR / "snps"
+
+
+def runtime_imports_dir() -> Path:
+    return runtime_snps_dir() / "imports"

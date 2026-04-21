@@ -44,26 +44,6 @@ def _env_float(name: str) -> float | None:
         return None
 
 
-def _temperature_fallback(exc: Exception) -> float | None:
-    text = str(exc).lower()
-    if "invalid temperature" not in text:
-        return None
-    match = re.search(r"only\s+([0-9]+(?:\.[0-9]+)?)\s+is\s+allowed", text)
-    if match:
-        return float(match.group(1))
-    if "only 1" in text:
-        return 1.0
-    return None
-
-
-def _default_temperature_for_provider(model: str, base_url: str | None) -> float:
-    model_lower = model.strip().lower()
-    base_lower = (base_url or "").strip().lower()
-    if model_lower.startswith("kimi") or "moonshot" in model_lower or "moonshot.cn" in base_lower:
-        return 1.0
-    return 0.0
-
-
 def _env_int(name: str) -> int | None:
     value = os.getenv(name)
     if value is None or not value.strip():
@@ -73,6 +53,48 @@ def _env_int(name: str) -> int | None:
     except ValueError:
         print(f"[llm_client] Ignore invalid {name}={value!r}; expected an integer.", file=sys.stderr)
         return None
+
+
+def _is_kimi_provider(model: str | None, base_url: str | None) -> bool:
+    model_lower = (model or "").strip().lower()
+    base_lower = (base_url or "").strip().lower()
+    return model_lower.startswith("kimi") or "moonshot" in model_lower or "moonshot.cn" in base_lower
+
+
+def _is_zhipu_provider(model: str | None, base_url: str | None) -> bool:
+    model_lower = (model or "").strip().lower()
+    base_lower = (base_url or "").strip().lower()
+    return model_lower.startswith("glm-") or "bigmodel.cn" in base_lower
+
+
+def _temperature_fallback(exc: Exception) -> float | None:
+    text = str(exc).lower()
+    if "invalid temperature" not in text:
+        return None
+    match = re.search(r"only\s+([0-9]+(?:\.[0-9]+)?)\s+is\s+allowed", text)
+    if match:
+        return float(match.group(1))
+    if "only 1" in text:
+        return 1.0
+    if "only 0.6" in text:
+        return 0.6
+    return None
+
+
+def _default_temperature_for_provider(model: str, base_url: str | None) -> float:
+    if _is_kimi_provider(model, base_url):
+        return 1.0
+    if _is_zhipu_provider(model, base_url):
+        return 1.0
+    return 0.0
+
+
+def _default_timeout_for_provider(model: str, base_url: str | None) -> float:
+    if _is_zhipu_provider(model, base_url):
+        return 90.0
+    if _is_kimi_provider(model, base_url):
+        return 60.0
+    return 25.0
 
 
 def _is_retryable_llm_error(exc: Exception) -> bool:
@@ -91,6 +113,8 @@ def _is_retryable_llm_error(exc: Exception) -> bool:
         "service unavailable",
         "bad gateway",
         "gateway timeout",
+        "internal server error",
+        "server error",
     ]
     return any(marker in text for marker in retry_markers)
 
@@ -148,6 +172,7 @@ class LLMClient:
         self.api_key = os.getenv("OPENAI_API_KEY", "").strip()
         self.base_url = os.getenv("OPENAI_BASE_URL", "").strip() or None
         requested_model = self.model or os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
         env_temperature = _env_float("LLM_TEMPERATURE")
         if env_temperature is not None:
             self.temperature = env_temperature
@@ -171,16 +196,21 @@ class LLMClient:
             request_timeout = _env_float("LLM_REQUEST_TIMEOUT_SECONDS")
             max_retries = _env_float("OPENAI_MAX_RETRIES")
             kwargs: Dict[str, Any] = {"api_key": self.api_key}
+
             if self.base_url:
                 kwargs["base_url"] = self.base_url
-            if request_timeout is not None:
-                kwargs["timeout"] = request_timeout
-            else:
-                kwargs["timeout"] = 25.0
+
+            kwargs["timeout"] = (
+                request_timeout
+                if request_timeout is not None
+                else _default_timeout_for_provider(requested_model, self.base_url)
+            )
+
             if max_retries is not None:
                 kwargs["max_retries"] = int(max_retries)
             else:
                 kwargs["max_retries"] = 0
+
             self._client = OpenAI(**kwargs)
             self.model = requested_model
         except Exception as exc:  # pragma: no cover - environment dependent
@@ -281,14 +311,39 @@ class LLMClient:
                 "Regenerate with a valid API key before final submission."
             )
 
-    def _create_completion(self, messages: list[Dict[str, str]], json_mode: bool) -> Any:
+    def _build_completion_kwargs(self, messages: list[Dict[str, str]], json_mode: bool) -> Dict[str, Any]:
         kwargs: Dict[str, Any] = {
             "model": self.model,
             "messages": messages,
             "temperature": self.temperature,
         }
-        if json_mode:
+
+        model_lower = (self.model or "").strip().lower()
+        is_kimi = _is_kimi_provider(self.model, self.base_url)
+        is_zhipu = _is_zhipu_provider(self.model, self.base_url)
+
+        max_tokens = _env_int("LLM_MAX_TOKENS")
+        if max_tokens is not None:
+            kwargs["max_tokens"] = max_tokens
+
+        extra_body: Dict[str, Any] = {}
+
+        if is_zhipu and _env_flag("LLM_DISABLE_THINKING", default=True):
+            extra_body["thinking"] = {"type": "disabled"}
+
+        if is_kimi and _env_flag("LLM_DISABLE_THINKING", default=False):
+            extra_body["thinking"] = {"type": "disabled"}
+
+        if extra_body:
+            kwargs["extra_body"] = extra_body
+
+        if json_mode and not model_lower.endswith("v"):
             kwargs["response_format"] = {"type": "json_object"}
+
+        return kwargs
+
+    def _create_completion(self, messages: list[Dict[str, str]], json_mode: bool) -> Any:
+        kwargs = self._build_completion_kwargs(messages, json_mode=json_mode)
 
         retry_attempts = _env_int("LLM_RETRY_ATTEMPTS")
         if retry_attempts is None:
@@ -336,6 +391,7 @@ class LLMClient:
                         file=sys.stderr,
                     )
                     raise
+
                 attempt += 1
                 total_sleep_seconds += delay
                 print(

@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
@@ -13,21 +13,35 @@
           <p class="eyebrow">Standalone Viewer</p>
           <h1>文献综述结果查看器</h1>
           <p class="lede">
-            这是一个纯前端查看器。选择项目根目录、`dats + outs` 目录，或者手动选择生成产物文件后，
-            页面会直接在浏览器里解析 `json / jsonl / csv / md`，不依赖本地 Python 服务。支持多次追加导入，
-            适合把每周从 GitHub Actions 下载下来的结果持续堆叠在同一个查看器里。
+            启动后会自动在根目录创建一个投递箱文件夹。你只需要把每次从 GitHub Actions 下载下来的结果目录或 zip
+            压缩包丢进去，查看器就能直接读取并堆叠展示；同时也保留手动选择文件和目录的方式，方便本地调试。
           </p>
+
+          <section class="dropbox-panel" aria-label="viewer drop folder">
+            <div class="dropbox-copy">
+              <span class="import-card-kicker">Drop Folder</span>
+              <strong>自动投递箱</strong>
+              <p id="dropFolderSummary">
+                查看器启动后会自动创建目录，并在这里显示当前路径。把 Actions 结果放进去后，点击读取即可。
+              </p>
+              <code id="dropFolderPath">loading...</code>
+            </div>
+            <div class="dropbox-actions">
+              <button id="refreshDropFolderButton" type="button">读取投递箱</button>
+              <button id="copyDropFolderButton" type="button" class="secondary-button">复制路径</button>
+            </div>
+          </section>
 
           <div class="viewer-import-grid">
             <label class="import-card" for="folderPicker">
               <span class="import-card-kicker">推荐</span>
               <strong>选择整个目录</strong>
-              <span>直接选择项目根目录，或至少包含 `dats/` 与 `outs/` 的目录。</span>
+              <span>直接选择项目结果目录，或至少包含 `dats/` 和 `outs/` 的目录。</span>
             </label>
             <label class="import-card" for="filePicker">
               <span class="import-card-kicker">兼容</span>
               <strong>手动选择文件</strong>
-              <span>适合分批导入多个 weekly 结果，后续导入不会覆盖前一批。</span>
+              <span>适合本地调试或零散文件追加导入，后续导入不会覆盖前一批。</span>
             </label>
           </div>
 
@@ -47,7 +61,7 @@
           </div>
 
           <div id="viewerLoadSummary" class="viewer-load-summary">
-            尚未载入文件。请先选择目录或文件，后续导入会自动追加堆叠。
+            尚未载入任何结果。你可以使用自动投递箱，也可以手动选择目录或文件。
           </div>
         </div>
       </section>
@@ -88,10 +102,9 @@
           </label>
           <button id="viewerRefreshButton" type="button">刷新视图</button>
           <p class="hint">
-            推荐至少导入这些文件：<code>papers_raw.json</code>、<code>paper_cards.jsonl</code>、
+            推荐至少包含这些文件：<code>papers_raw.json</code>、<code>paper_cards.jsonl</code>、
             <code>comparison_table.csv</code>、<code>taxonomy.md</code>、
-            <code>trend_analysis.md</code>、<code>weekly_digest_latest.md</code>。可以多次导入不同周次的结果包，
-            查看器会做累计展示。
+            <code>trend_analysis.md</code>、<code>weekly_digest_latest.md</code>。你可以把不同周次结果持续堆叠在同一个查看器里。
           </p>
         </aside>
 
@@ -102,7 +115,7 @@
                 <p class="eyebrow">Status Snapshot</p>
                 <h2>运行状态快照</h2>
                 <p id="viewerMonitorHeadline" class="monitor-headline">
-                  等待加载 `pipeline_status.json` 或其他统计文件。
+                  等待载入 `pipeline_status.json` 或其他统计文件。
                 </p>
               </div>
               <div id="viewerMonitorMeta" class="monitor-meta"></div>

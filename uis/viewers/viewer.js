@@ -1,3 +1,4 @@
+﻿
 const viewerState = {
   importBatches: [],
   rawPapers: [],
@@ -10,6 +11,9 @@ const viewerState = {
   pipelineStatuses: [],
   pipelineHistory: [],
   loadedFiles: [],
+  dropFolderMeta: null,
+  dropFolderError: "",
+  autoRefreshSeconds: 20,
 };
 
 const viewerFileHints = {
@@ -100,10 +104,11 @@ function latestByTime(items, timeField) {
 function rebuildDerivedState() {
   const batches = viewerState.importBatches;
   viewerState.loadedFiles = batches.flatMap((batch) =>
-    batch.loadedFiles.map((item) => ({
+    (batch.loadedFiles || []).map((item) => ({
       ...item,
       batchId: batch.id,
       batchLabel: batch.label,
+      source: batch.source || "manual",
     })),
   );
 
@@ -302,6 +307,11 @@ function readFileText(file) {
   });
 }
 
+async function fetchJson(url) {
+  const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+}
 async function loadFiles(fileList) {
   const files = Array.from(fileList || []);
   const mapped = {};
@@ -325,6 +335,9 @@ async function loadFiles(fileList) {
   const batch = {
     id: batchId,
     label: batchLabel,
+    source: "manual",
+    sourceType: "files",
+    sourcePath: "",
     loadedFiles,
     rawPapers: [],
     cards: [],
@@ -351,24 +364,33 @@ async function loadFiles(fileList) {
       __batch_label: batchLabel,
     }));
   }
-  if (mapped.taxonomy) {
-    batch.taxonomy = await readFileText(mapped.taxonomy);
-  }
-  if (mapped.trend) {
-    batch.trend = await readFileText(mapped.trend);
-  }
-  if (mapped.weekly) {
-    batch.weekly = await readFileText(mapped.weekly);
-  }
-  if (mapped.pipelineStatus) {
-    batch.pipelineStatus = JSON.parse(await readFileText(mapped.pipelineStatus));
-  }
-  if (mapped.pipelineHistory) {
-    batch.pipelineHistory = JSON.parse(await readFileText(mapped.pipelineHistory));
-  }
+  if (mapped.taxonomy) batch.taxonomy = await readFileText(mapped.taxonomy);
+  if (mapped.trend) batch.trend = await readFileText(mapped.trend);
+  if (mapped.weekly) batch.weekly = await readFileText(mapped.weekly);
+  if (mapped.pipelineStatus) batch.pipelineStatus = JSON.parse(await readFileText(mapped.pipelineStatus));
+  if (mapped.pipelineHistory) batch.pipelineHistory = JSON.parse(await readFileText(mapped.pipelineHistory));
 
   viewerState.importBatches.push(batch);
   rebuildDerivedState();
+}
+
+function replaceDropFolderBatches(batches) {
+  const manualBatches = viewerState.importBatches.filter((batch) => batch.source !== "dropbox");
+  const normalized = (batches || []).map((batch) => ({ ...batch, source: "dropbox" }));
+  viewerState.importBatches = [...normalized, ...manualBatches];
+  rebuildDerivedState();
+}
+
+async function refreshDropFolder() {
+  try {
+    const payload = await fetchJson("/api/imports/load");
+    viewerState.dropFolderMeta = payload.meta || null;
+    viewerState.dropFolderError = "";
+    replaceDropFolderBatches(Array.isArray(payload.batches) ? payload.batches : []);
+  } catch (error) {
+    viewerState.dropFolderError = String(error.message || error || "Unknown error");
+  }
+  renderAll();
 }
 
 function currentSummary() {
@@ -386,12 +408,33 @@ function currentSummary() {
   };
 }
 
+function renderDropFolderPanel() {
+  const meta = viewerState.dropFolderMeta;
+  const pathNode = $("dropFolderPath");
+  const summaryNode = $("dropFolderSummary");
+  if (!meta) {
+    pathNode.textContent = "loading...";
+    summaryNode.textContent = viewerState.dropFolderError
+      ? `读取投递箱失败：${viewerState.dropFolderError}`
+      : "正在读取投递箱目录...";
+    return;
+  }
+
+  pathNode.textContent = meta.importsDir || "unknown";
+  summaryNode.textContent = viewerState.dropFolderError
+    ? `投递箱路径已创建，但最近一次读取失败：${viewerState.dropFolderError}`
+    : `当前投递箱内共有 ${meta.entryCount || 0} 个条目。把 Actions 下载的目录或 zip 放进去后，点击“读取投递箱”或等待 ${viewerState.autoRefreshSeconds} 秒自动刷新。`;
+}
+
 function renderLoadSummary() {
   const used = viewerState.loadedFiles.filter((item) => item.kind !== "unused");
   const unused = viewerState.loadedFiles.filter((item) => item.kind === "unused");
+  const dropFolderBatches = viewerState.importBatches.filter((item) => item.source === "dropbox").length;
+  const manualBatches = viewerState.importBatches.filter((item) => item.source !== "dropbox").length;
+
   $("viewerLoadSummary").textContent = used.length
-    ? `已累计导入 ${viewerState.importBatches.length} 个批次，识别文件 ${used.length} 个，未使用 ${unused.length} 个。后续导入会继续追加，不会覆盖上一批。`
-    : "尚未识别到目标文件。建议选择项目根目录，或至少包含 dats 与 outs。";
+    ? `当前共堆叠 ${viewerState.importBatches.length} 批结果，其中投递箱 ${dropFolderBatches} 批，手动导入 ${manualBatches} 批；识别文件 ${used.length} 个，未使用 ${unused.length} 个。`
+    : "还没有识别到可展示的结果文件。建议先把 Actions 下载的目录或 zip 放进投递箱，再点击“读取投递箱”。";
 }
 
 function renderLoadedFiles() {
@@ -407,9 +450,13 @@ function renderLoadedFiles() {
         <section class="loaded-batch">
           <div class="loaded-batch-head">
             <strong>${escapeHtml(batch.label)}</strong>
-            <span>${escapeHtml(batch.loadedFiles.length)} files</span>
+            <span>${escapeHtml((batch.loadedFiles || []).length)} files</span>
           </div>
-          ${batch.loadedFiles
+          <div class="loaded-batch-sub">
+            <span>${escapeHtml(batch.sourceType || batch.source || "unknown")}</span>
+            <span>${escapeHtml(shortText(batch.sourcePath || "manual import", 56))}</span>
+          </div>
+          ${(batch.loadedFiles || [])
             .map(
               (item) => `
                 <div class="loaded-file-item ${item.kind === "unused" ? "unused" : ""}">
@@ -456,9 +503,9 @@ function renderStatusBand() {
   const strip = $("viewerStageStrip");
 
   if (!status) {
-    headline.textContent = "未加载 pipeline_status.json，当前展示的是静态结果文件视图。";
+    headline.textContent = "尚未读取到 pipeline_status.json，当前显示的是静态结果视图。";
     meta.innerHTML = `<span class="status-chip idle">No live status</span>`;
-    strip.innerHTML = `<div class="empty-state">如果导入 outs/stats/pipeline_status.json，这里会显示完整阶段状态。</div>`;
+    strip.innerHTML = `<div class="empty-state">如果投递箱里包含 outs/stats/pipeline_status.json，这里会显示完整阶段状态。</div>`;
     return;
   }
 
@@ -518,7 +565,6 @@ function renderMarkdownPanels() {
   renderDocStack("viewerTaxonomyPanel", viewerState.taxonomyDocs, "未加载 taxonomy.md。");
   renderDocStack("viewerTrendPanel", viewerState.trendDocs, "未加载 trend_analysis.md。");
 }
-
 function populateCategoryOptions() {
   const select = $("viewerCategorySelect");
   const categories = new Set();
@@ -635,7 +681,7 @@ function renderCards() {
             <div><strong>Metrics</strong><p>${escapeHtml(shortText(card.metrics, 260))}</p></div>
             <div><strong>Results</strong><p>${escapeHtml(shortText(card.results_summary, 420))}</p></div>
             <div><strong>Limitations</strong><p>${escapeHtml(shortText(card.limitations, 320))}</p></div>
-            <div><strong>Audit</strong><p>${escapeHtml(card.model || "unknown")} · ${escapeHtml(formatDateTime(card.generated_at))}</p></div>
+            <div><strong>Audit</strong><p>${escapeHtml(card.model || "unknown")} | ${escapeHtml(formatDateTime(card.generated_at))}</p></div>
           </div>
         </article>
       `;
@@ -644,6 +690,7 @@ function renderCards() {
 }
 
 function renderAll() {
+  renderDropFolderPanel();
   renderLoadSummary();
   renderLoadedFiles();
   renderViewerMetrics();
@@ -689,6 +736,9 @@ async function tryLoadBundledSample() {
   const batch = {
     id: `bundled-sample-${Date.now()}`,
     label: batchLabel,
+    source: "bundled",
+    sourceType: "sample",
+    sourcePath: "repository sample",
     loadedFiles: loaded,
     rawPapers: [],
     cards: [],
@@ -707,9 +757,7 @@ async function tryLoadBundledSample() {
       const text = await response.text();
       loaded.push({ name: url.split("/").pop(), relativePath: url, size: text.length, kind });
       if (kind === "papersRaw") batch.rawPapers = JSON.parse(text);
-      if (kind === "cards") {
-        batch.cards = parseJsonl(text).map((item) => ({ ...item, __batch_label: batchLabel }));
-      }
+      if (kind === "cards") batch.cards = parseJsonl(text).map((item) => ({ ...item, __batch_label: batchLabel }));
       if (kind === "comparison") {
         batch.comparison = csvToRows(text).map((row) => ({ ...row, __batch_label: batchLabel }));
       }
@@ -727,12 +775,24 @@ async function tryLoadBundledSample() {
   rebuildDerivedState();
   renderAll();
 }
+async function copyDropFolderPath() {
+  const path = viewerState.dropFolderMeta?.importsDir;
+  if (!path) return;
+  try {
+    await navigator.clipboard.writeText(path);
+    $("dropFolderSummary").textContent = "投递箱路径已复制。现在可以直接把结果目录或 zip 放进去。";
+  } catch (error) {
+    $("dropFolderSummary").textContent = `复制失败，请手动复制这个路径：${path}`;
+  }
+}
 
 function bindEvents() {
   $("pickFolderButton").addEventListener("click", () => $("folderPicker").click());
   $("pickFilesButton").addEventListener("click", () => $("filePicker").click());
   $("clearViewerButton").addEventListener("click", resetViewer);
   $("viewerRefreshButton").addEventListener("click", renderAll);
+  $("refreshDropFolderButton").addEventListener("click", refreshDropFolder);
+  $("copyDropFolderButton").addEventListener("click", copyDropFolderPath);
 
   $("folderPicker").addEventListener("change", async (event) => {
     await loadFiles(event.target.files);
@@ -754,3 +814,5 @@ function bindEvents() {
 
 bindEvents();
 renderAll();
+refreshDropFolder();
+window.setInterval(refreshDropFolder, viewerState.autoRefreshSeconds * 1000);
