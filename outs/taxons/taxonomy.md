@@ -1,83 +1,126 @@
-# Taxonomy
+# Retrieval-Augmented Generation (RAG) Research Taxonomy
 
-Generated at: 2026-04-21T15:00:45.483863+00:00
-Evidence base: 134 structured paper cards derived from arXiv abstracts.
+## 1. Domain-Specific RAG Applications (特定领域RAG应用)
+**Evidence Count**: 34
+**Representative Papers**:
+- "Enhancing Large Language Models with Retrieval Augmented Generation for Software Testing and Inspection Automation"
+- "Enhancing Mental Health Counseling Support in Bangladesh using Culturally-Grounded Knowledge"
+- "Building Trust in the Skies: A Knowledge-Grounded LLM-based Framework for Aviation Safety"
+- "AOP-Smart: A RAG-Enhanced Large Language Model Framework for Adverse Outcome Pathway Analysis"
 
-## 高层分类 High-Level Categories
-- **智能体与多智能体 RAG (Agentic and Multi-Agent RAG)** (22 papers / 22 篇):
-  中文说明: 关注带有规划、工具调用、记忆导航或多智能体协作的 RAG 系统。
-  English note: RAG systems that use agents, planning, tool use, memory navigation, or multi-agent collaboration.
-  Representative papers / 代表论文: Don't Retrieve, Navigate: Distilling Enterprise Knowledge into Navigable Agent Skills for QA and RAG; Beyond Arrow's Impossibility: Fairness as an Emergent Property of Multi-Agent Collaboration; NaviRAG: Towards Active Knowledge Navigation for Retrieval-Augmented Generation.
-  Fine-grained signals from cards / 卡片细粒度信号: Agentic and Multi-Agent RAG; Domain-Specific RAG Applications; Hierarchical Navigation for Agentic RAG; Multi-Agent RAG for Fairness; Hierarchical Active Navigation RAG.
-- **多模态与视觉 RAG (Multimodal and Visual RAG)** (21 papers / 21 篇):
-  中文说明: 关注图像、视频、长视觉文档、分割、视觉问答等多模态场景。
-  English note: RAG for images, videos, long visual documents, segmentation, visual QA, and other multimodal inputs.
-  Representative papers / 代表论文: UrbanClipAtlas: A Visual Analytics Framework for Event and Scene Retrieval in Urban Videos; UniDoc-RL: Coarse-to-Fine Visual RAG with Hierarchical Actions and Dense Rewards; ROSE: Retrieval-Oriented Segmentation Enhancement.
-  Fine-grained signals from cards / 卡片细粒度信号: Multimodal and Visual RAG; Video RAG for Urban Analytics; Coarse-to-Fine Visual RAG with Hierarchical RL; Retrieval-Augmented Multimodal Segmentation; Multimodal RAG for Deepfake Detection.
-- **评测、基准与诊断 (Evaluation, Benchmarks, and Diagnostics)** (21 papers / 21 篇):
-  中文说明: 关注基准、指标、诊断框架、性能预测和评测协议。
-  English note: Benchmarks, metrics, diagnostic frameworks, performance predictors, and evaluation protocols.
-  Representative papers / 代表论文: A Unified HI Rotation Curve Corpus for Computational Astrophysics: 438 Galaxies from SPARC, THINGS, LITTLE THINGS, and WALLABY DR2; FRESCO: Benchmarking and Optimizing Re-rankers for Evolving Semantic Conflict in Retrieval-Augmented Generation; Empirical Evaluation of PDF Parsing and Chunking for Financial Question Answering with RAG.
-  Fine-grained signals from cards / 卡片细粒度信号: Evaluation and Benchmarking; Evaluation, Benchmarks, and Diagnostics; Astronomical Dataset for RAG and Computational Analysis; RAG Re-ranking / Temporal Dynamics Benchmark; PDF Parsing and Chunking for RAG.
-- **可靠性、安全、隐私与防护 (Reliability, Safety, Privacy, and Security)** (15 papers / 15 篇):
-  中文说明: 关注幻觉、忠实性、鲁棒性、投毒、隐私泄露、偏见和安全部署。
-  English note: Work on hallucination, faithfulness, robustness, poisoning, privacy leakage, bias, and safe deployment.
-  Representative papers / 代表论文: Shuffle the Context: RoPE-Perturbed Self-Distillation for Long-Context Adaptation; The Cognitive Circuit Breaker: A Systems Engineering Framework for Intrinsic AI Reliability; AdversarialCoT: Single-Document Retrieval Poisoning for LLM Reasoning.
-  Fine-grained signals from cards / 卡片细粒度信号: Reliability, Safety, Privacy, and Security; Robust Long-Context Adaptation for RAG; Intrinsic AI Reliability and Hallucination Detection; Adversarial Attacks on RAG / Knowledge Base Poisoning; Robustness Evaluation of Adaptive RAG.
-- **核心检索与排序方法 (Core Retrieval and Ranking Methods)** (13 papers / 13 篇):
-  中文说明: 关注检索器、重排序、查询路由、索引、分块、嵌入与证据选择等核心方法。
-  English note: Retriever, reranker, query routing, indexing, chunking, embedding, and evidence-selection methods.
-  Representative papers / 代表论文: Toward Agentic RAG for Ukrainian; Beyond Factual Grounding: The Case for Opinion-Aware Retrieval-Augmented Generation; CARO: Chain-of-Analogy Reasoning Optimization for Robust Content Moderation.
-  Fine-grained signals from cards / 卡片细粒度信号: Agentic RAG for Ukrainian language; Opinion-Aware Retrieval-Augmented Generation; Reasoning Optimization for Content Moderation; Domain-Specific Code Generation with Small Language Models; Healthcare RAG system.
-- **领域应用型 RAG (Domain-Specific RAG Applications)** (12 papers / 12 篇):
-  中文说明: 关注医疗、法律、教育、金融、软件、科学、城市等具体领域适配。
-  English note: RAG adapted to concrete domains such as medicine, law, education, finance, software, science, and cities.
-  Representative papers / 代表论文: Enhancing Large Language Models with Retrieval Augmented Generation for Software Testing and Inspection Automation; Enhancing Mental Health Counseling Support in Bangladesh using Culturally-Grounded Knowledge; Automatically Inferring Teachers' Geometric Content Knowledge: A Skills Based Approach.
-  Fine-grained signals from cards / 卡片细粒度信号: RAG for Software Testing and Inspection; RAG for Mental Health Counseling; RAG for Educational Assessment; Adaptive Hybrid Retrieval / Query Routing; Legal AI / Legal Reasoning.
-- **综述、理论与治理 (Survey, Theory, and Governance)** (10 papers / 10 篇):
-  中文说明: 关注综述、理论分析、治理、合规和社会技术视角。
-  English note: Survey papers, theoretical analyses, governance, compliance, and socio-technical framing.
-  Representative papers / 代表论文: LR-Robot: An Human-in-the-Loop LLM Framework for Systematic Literature Reviews with Applications in Financial Research; Large Language Models to Enhance Business Process Modeling: Past, Present, and Future Trends; Knowledge Compounding: An Empirical Economic Analysis of Self-Evolving Knowledge Wikis under the Agentic ROI Framework.
-  Fine-grained signals from cards / 卡片细粒度信号: Human-in-the-Loop RAG for Systematic Literature Review; Survey on LLMs for Business Process Modeling; Economic Analysis of Knowledge Compounding in RAG; Survey on utility-centric retrieval for RAG; Security and safety taxonomy for RAG.
-- **知识图谱与结构化知识 RAG (Knowledge Graph and Structured Knowledge RAG)** (9 papers / 9 篇):
-  中文说明: 关注图谱、三元组、超图、符号结构或显式记忆组织方式。
-  English note: Methods that organize evidence as graphs, triplets, hypergraphs, symbolic structures, or explicit memory.
-  Representative papers / 代表论文: Transforming External Knowledge into Triplets for Enhanced Retrieval in RAG of LLMs; Knowledge Is Not Static: Order-Aware Hypergraph RAG for Language Models; CircuitSynth: Reliable Synthetic Data Generation.
-  Fine-grained signals from cards / 卡片细粒度信号: Knowledge Graph and Structured Knowledge RAG; Structured Triplet-based Retrieval; Order-Aware Hypergraph Retrieval; Neuro-symbolic Synthetic Data Generation; Knowledge Graph Enhanced RAG for Safety-Critical Applications.
-- **通用或未明确 RAG (General or Unspecified RAG)** (9 papers / 9 篇):
-  中文说明: 摘要证据不足，暂时无法归入更具体的宏观类别。
-  English note: Papers whose abstracts do not provide enough evidence for a more specific macro category.
-  Representative papers / 代表论文: CodaRAG: Connecting the Dots with Associativity Inspired by Complementary Learning; Trans-RAG: Query-Centric Vector Transformation for Secure Cross-Organizational Retrieval; MAB-DQA: Addressing Query Aspect Importance in Document Question Answering with Multi-Armed Bandits.
-  Fine-grained signals from cards / 卡片细粒度信号: Core Retrieval and Ranking Methods; Associative Retrieval and Graph-based RAG; Secure Cross-Organizational Retrieval; Adaptive retrieval with multi-armed bandits; Dynamic Recursive Summarization for RAG.
-- **效率、部署与端侧 RAG (Efficiency, Deployment, and On-Device RAG)** (2 papers / 2 篇):
-  中文说明: 关注延迟、压缩、端侧部署、运行成本和工程约束。
-  English note: Systems focused on latency, compression, edge or on-device use, deployment constraints, and operational cost.
-  Representative papers / 代表论文: A Unified Model and Document Representation for On-Device Retrieval-Augmented Generation; CubeGraph: Efficient Retrieval-Augmented Generation for Spatial and Temporal Data.
-  Fine-grained signals from cards / 卡片细粒度信号: On-Device RAG; Spatio-Temporal RAG Indexing.
+**Common Innovation Types**:
+- application_or_domain_adaptation (12)
+- system_or_architecture (10)
+- benchmark_or_evaluation (6)
+- retrieval_method (4)
+- generation_method (2)
 
-## 创新类型 Innovation Types
-- **system_or_architecture**: 43 papers.
-- **benchmark_or_evaluation**: 29 papers.
-- **retrieval_method**: 28 papers.
-- **application_or_domain_adaptation**: 11 papers.
-- **reliability_or_safety**: 11 papers.
-- **survey**: 5 papers.
-- **generation_method**: 5 papers.
-- **theoretical_analysis**: 2 papers.
+**Ambiguous/Low-Confidence Areas**:
+- Domain adaptation generalizability across different domains
+- Integration of domain-specific knowledge with general language models
+- Handling domain-specific terminology and constraints
 
-## 关键词信号 Keyword Signals
-- `retrieval` appears in 134 cards.
-- `benchmark` appears in 69 cards.
-- `evaluation` appears in 57 cards.
-- `domain` appears in 37 cards.
-- `agent` appears in 33 cards.
-- `hallucination` appears in 29 cards.
-- `graph` appears in 27 cards.
-- `efficiency` appears in 20 cards.
-- `medical` appears in 11 cards.
-- `multimodal` appears in 11 cards.
-- `knowledge graph` appears in 9 cards.
-- `faithfulness` appears in 8 cards.
+## 2. Multi-Agent and Collaborative RAG (多代理协作RAG)
+**Evidence Count**: 13
+**Representative Papers**:
+- "Beyond Arrow's Impossibility: Fairness as an Emergent Property of Multi-Agent Collaboration"
+- "BLUEmed: Retrieval-Augmented Multi-Agent Debate for Clinical Error Detection"
+- "AffectAgent: Collaborative Multi-Agent Reasoning for Retrieval-Augmented Multimodal Emotion Recognition"
+- "MA-IDS: Multi-Agent RAG Framework for IoT Network Intrusion Detection with an Experience Library"
 
-## 证据说明 Evidence Note
-This taxonomy is generated from intermediate JSON cards, not directly from free-form summarization. Categories should be reviewed when many cards have `unknown` or `not specified` fields.
+**Common Innovation Types**:
+- system_or_architecture (7)
+- retrieval_method (3)
+- reliability_or_safety (2)
+- benchmark_or_evaluation (1)
+
+**Ambiguous/Low-Confidence Areas**:
+- Agent collaboration mechanisms and communication protocols
+- Scaling to large numbers of agents
+- Ensuring consistency across multiple agents
+
+## 3. Long Document and Visual RAG (长文档与视觉RAG)
+**Evidence Count**: 17
+**Representative Papers**:
+- "UniDoc-RL: Coarse-to-Fine Visual RAG with Hierarchical Actions and Dense Rewards"
+- "MM-Doc-R1: Training Agents for Long Document Visual Question Answering through Multi-turn Reinforcement Learning"
+- "DocSeeker: Structured Visual Reasoning with Evidence Grounding for Long Document Understanding"
+- "VISOR: Agentic Visual Retrieval-Augmented Generation via Iterative Search and Over-horizon Reasoning"
+
+**Common Innovation Types**:
+- retrieval_method (8)
+- system_or_architecture (5)
+- reliability_or_safety (2)
+- benchmark_or_evaluation (1)
+- application_or_domain_adaptation (1)
+
+**Ambiguous/Low-Confidence Areas**:
+- Handling very long documents (>100k tokens)
+- Integration of multiple modalities in a unified framework
+- Visual-text alignment and reasoning
+
+## 4. Security and Reliability in RAG (RAG安全与可靠性)
+**Evidence Count**: 15
+**Representative Papers**:
+- "The Cognitive Circuit Breaker: A Systems Engineering Framework for Intrinsic AI Reliability"
+- "Detecting RAG Extraction Attack via Dual-Path Runtime Integrity Game"
+- "AdversarialCoT: Single-Document Retrieval Poisoning for LLM Reasoning"
+- "Securing Retrieval-Augmented Generation: A Taxonomy of Attacks, Defenses, and Future Directions"
+
+**Common Innovation Types**:
+- reliability_or_safety (8)
+- retrieval_method (3)
+- benchmark_or_evaluation (2)
+- system_or_architecture (2)
+
+**Ambiguous/Low-Confidence Areas**:
+- Protection against sophisticated adversarial attacks
+- Balancing security with system performance
+- Real-time detection of hallucinations and factual inconsistencies
+
+## 5. Retrieval Methods and Optimization (检索方法与优化)
+**Evidence Count**: 22
+**Representative Papers**:
+- "NaviRAG: Towards Active Knowledge Navigation for Retrieval-Augmented Generation"
+- "CodaRAG: Connecting the Dots with Associativity Inspired by Complementary Learning"
+- "Knowledge Is Not Static: Order-Aware Hypergraph RAG for Language Models"
+- "Transforming External Knowledge into Triplets for Enhanced Retrieval in RAG of LLMs"
+
+**Common Innovation Types**:
+- retrieval_method (15)
+- benchmark_or_evaluation (3)
+- system_or_architecture (2)
+- application_or_domain_adaptation (1)
+- generation_method (1)
+
+**Ambiguous/Low-Confidence Areas**:
+- Optimal retrieval strategies for different types of queries
+- Balancing precision and recall in retrieval
+- Handling dynamic and evolving knowledge bases
+
+## 6. Evaluation and Benchmarking (评估与基准测试)
+**Evidence Count**: 12
+**Representative Papers**:
+- "FRESCO: Benchmarking and Optimizing Re-rankers for Evolving Semantic Conflict in Retrieval-Augmented Generation"
+- "Facet-Level Tracing of Evidence Uncertainty and Hallucination in RAG"
+- "This Treatment Works, Right? Evaluating LLM Sensitivity to Patient Question Framing in Medical QA"
+- "Rag Performance Prediction for Question Answering"
+
+**Common Innovation Types**:
+- benchmark_or_evaluation (12)
+- retrieval_method (1)
+
+**Ambiguous/Low-Confidence Areas**:
+- Creating comprehensive evaluation benchmarks that cover all aspects of RAG
+- Measuring user satisfaction and real-world effectiveness
+- Comparing different RAG systems across multiple dimensions
+
+## 7. Healthcare and Medical RAG (医疗健康RAG)
+**Evidence Count**: 11
+**Representative Papers**:
+- "Representation geometry shapes task performance in vision-language modeling for CT enterography"
+- "A Systematic Study of Retrieval Pipeline Design for Retrie
+
+---
+
+Generated from 134 structured paper cards. Model: glm-4.5-air. Generated at: 2026-04-21T15:44:42.255698+00:00.
