@@ -1,4 +1,4 @@
-name: Weekly Literature Survey
+name: Test
 
 on:
   schedule:
@@ -15,14 +15,16 @@ jobs:
 
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
-      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
+      OPENAI_BASE_URL: https://open.bigmodel.cn/api/paas/v4/
+      OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-4.5-air' }}
       LLM_TEMPERATURE: "1"
-      LLM_REQUEST_TIMEOUT_SECONDS: "25"
+      LLM_REQUEST_TIMEOUT_SECONDS: "90"
       OPENAI_MAX_RETRIES: "0"
       LLM_RETRY_ATTEMPTS: "1"
       LLM_RETRY_BACKOFF_SECONDS: "2"
       LLM_MAX_TOTAL_RETRY_SECONDS: "6"
+      LLM_MAX_TOKENS: "1200"
+      LLM_DISABLE_THINKING: "1"
 
     steps:
       - name: Checkout repository
@@ -38,6 +40,28 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r cfgs/pkgs/requirements.txt
 
+      - name: Smoke test GLM 4.5 Air
+        run: |
+          python - <<'PY'
+          import os
+          from openai import OpenAI
+
+          client = OpenAI(
+              api_key=os.environ["OPENAI_API_KEY"],
+              base_url=os.environ["OPENAI_BASE_URL"],
+              timeout=float(os.environ.get("LLM_REQUEST_TIMEOUT_SECONDS", "90")),
+              max_retries=int(os.environ.get("OPENAI_MAX_RETRIES", "0")),
+          )
+
+          resp = client.chat.completions.create(
+              model=os.environ["OPENAI_MODEL"],
+              messages=[{"role": "user", "content": "只回复 ok"}],
+              max_tokens=16,
+              extra_body={"thinking": {"type": "disabled"}},
+          )
+          print(resp.choices[0].message.content)
+          PY
+
       - name: Run weekly literature survey pipeline
         run: python -m pkgs.surveys.clis.run
 
@@ -49,15 +73,16 @@ jobs:
           cp -R dats "${SNAPSHOT_ROOT}/dats"
           cp -R outs "${SNAPSHOT_ROOT}/outs"
           (cd snps/weeklies && zip -rq "weekly-results-${RUN_STAMP}.zip" "${RUN_STAMP}")
-
+          
       - name: Commit generated data and reports
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dats outs snps
+          git add dats outs
           if git diff --cached --quiet; then
             echo "No generated changes to commit."
           else
             git commit -m "chore: update weekly literature survey"
             git push
           fi
+       
