@@ -95,6 +95,24 @@ def _is_retryable_llm_error(exc: Exception) -> bool:
     return any(marker in text for marker in retry_markers)
 
 
+def _is_rate_limit_exhausted_error(exc: Exception) -> bool:
+    text = str(exc).lower()
+    hard_limit_markers = [
+        "tpd rate limit",
+        "request reached organization tpd rate limit",
+        "rate_limit_reached_error",
+        "quota",
+        "insufficient_quota",
+        "exceeded your current quota",
+    ]
+    return any(marker in text for marker in hard_limit_markers)
+
+
+def _is_timeout_error(exc: Exception) -> bool:
+    text = str(exc).lower()
+    return "timed out" in text or "timeout" in text
+
+
 def _strip_json_fence(text: str) -> str:
     text = text.strip()
     if text.startswith("```"):
@@ -158,9 +176,11 @@ class LLMClient:
             if request_timeout is not None:
                 kwargs["timeout"] = request_timeout
             else:
-                kwargs["timeout"] = 60.0
+                kwargs["timeout"] = 25.0
             if max_retries is not None:
                 kwargs["max_retries"] = int(max_retries)
+            else:
+                kwargs["max_retries"] = 0
             self._client = OpenAI(**kwargs)
             self.model = requested_model
         except Exception as exc:  # pragma: no cover - environment dependent
@@ -272,12 +292,16 @@ class LLMClient:
 
         retry_attempts = _env_int("LLM_RETRY_ATTEMPTS")
         if retry_attempts is None:
-            retry_attempts = 3
+            retry_attempts = 1
         retry_backoff_seconds = _env_float("LLM_RETRY_BACKOFF_SECONDS")
         if retry_backoff_seconds is None:
-            retry_backoff_seconds = 4.0
+            retry_backoff_seconds = 2.0
+        max_total_retry_seconds = _env_float("LLM_MAX_TOTAL_RETRY_SECONDS")
+        if max_total_retry_seconds is None:
+            max_total_retry_seconds = 8.0
 
         attempt = 0
+        total_sleep_seconds = 0.0
         while True:
             try:
                 return self._client.chat.completions.create(**kwargs)
@@ -292,11 +316,28 @@ class LLMClient:
                     kwargs["temperature"] = fallback_temperature
                     continue
 
+                if _is_rate_limit_exhausted_error(exc):
+                    print(
+                        "[llm_client] Hard rate limit reached; skipping retries and falling back quickly.",
+                        file=sys.stderr,
+                    )
+                    raise
+
                 if attempt >= retry_attempts or not _is_retryable_llm_error(exc):
                     raise
 
                 delay = retry_backoff_seconds * (2**attempt)
+                if _is_timeout_error(exc):
+                    delay = min(delay, 3.0)
+                if total_sleep_seconds + delay > max_total_retry_seconds:
+                    print(
+                        f"[llm_client] Retry budget exhausted after {total_sleep_seconds:.1f}s; "
+                        "stopping retries.",
+                        file=sys.stderr,
+                    )
+                    raise
                 attempt += 1
+                total_sleep_seconds += delay
                 print(
                     f"[llm_client] Retryable API error on attempt {attempt}/{retry_attempts}: {exc}. "
                     f"Sleeping {delay:.1f}s before retry.",

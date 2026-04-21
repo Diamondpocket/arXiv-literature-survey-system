@@ -14,7 +14,8 @@
           <h1>文献综述结果查看器</h1>
           <p class="lede">
             这是一个纯前端查看器。选择项目根目录、`dats + outs` 目录，或者手动选择生成产物文件后，
-            页面会直接在浏览器里解析 `json / jsonl / csv / md`，不依赖本地 Python 服务。
+            页面会直接在浏览器里解析 `json / jsonl / csv / md`，不依赖本地 Python 服务。支持多次追加导入，
+            适合把每周从 GitHub Actions 下载下来的结果持续堆叠在同一个查看器里。
           </p>
 
           <div class="viewer-import-grid">
@@ -26,7 +27,7 @@
             <label class="import-card" for="filePicker">
               <span class="import-card-kicker">兼容</span>
               <strong>手动选择文件</strong>
-              <span>适合只想查看部分产物，或浏览器不支持目录导入时使用。</span>
+              <span>适合分批导入多个 weekly 结果，后续导入不会覆盖前一批。</span>
             </label>
           </div>
 
@@ -46,7 +47,7 @@
           </div>
 
           <div id="viewerLoadSummary" class="viewer-load-summary">
-            尚未载入文件。请先选择目录或文件。
+            尚未载入文件。请先选择目录或文件，后续导入会自动追加堆叠。
           </div>
         </div>
       </section>
@@ -89,7 +90,8 @@
           <p class="hint">
             推荐至少导入这些文件：<code>papers_raw.json</code>、<code>paper_cards.jsonl</code>、
             <code>comparison_table.csv</code>、<code>taxonomy.md</code>、
-            <code>trend_analysis.md</code>、<code>weekly_digest_latest.md</code>。
+            <code>trend_analysis.md</code>、<code>weekly_digest_latest.md</code>。可以多次导入不同周次的结果包，
+            查看器会做累计展示。
           </p>
         </aside>
 

@@ -1,6 +1,15 @@
 from __future__ import annotations
 
-from ..webs.servers import main
+import sys
+from pathlib import Path
+
+try:
+    from pkgs.surveys.webs.servers import main
+except ImportError:
+    PROJECT_ROOT = Path(__file__).resolve().parents[3]
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from pkgs.surveys.webs.servers import main
 
 
 if __name__ == "__main__":

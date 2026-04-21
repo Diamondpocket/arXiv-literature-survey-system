@@ -370,6 +370,22 @@ h1 {
   overflow: auto;
 }
 
+.loaded-batch {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.loaded-batch-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(23, 55, 72, 0.08);
+  color: var(--navy);
+}
+
 .loaded-file-item {
   display: grid;
   gap: 4px;
@@ -387,6 +403,27 @@ h1 {
 
 .loaded-file-item.unused {
   opacity: 0.7;
+}
+
+.viewer-doc-stack {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(23, 55, 72, 0.08);
+}
+
+.viewer-doc-stack:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.viewer-doc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: var(--navy);
 }
 
 .viewer-filter-head {

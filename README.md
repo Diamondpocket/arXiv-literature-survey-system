@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 # arXiv Literature Survey System
 
+=======
+# arXiv Literature Survey System  
+>>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
 # arXiv 文献自动综述生成系统
 
 这是一个面向 `arXiv` 的自动化文献追踪与周报生成系统。  
@@ -181,6 +185,7 @@ http://127.0.0.1:8765
 
 - `outs/taxons/taxonomy.md`  
   分类体系 `taxonomy`
+<<<<<<< HEAD
   
 - `outs/tables/comparison_table.csv`  
   方法对比表 `comparison table`
@@ -188,24 +193,44 @@ http://127.0.0.1:8765
 - `outs/trends/trend_analysis.md`  
   趋势分析与研究空白 `trend analysis and research gaps`
   
+=======
+
+- `outs/tables/comparison_table.csv`  
+  方法对比表 `comparison table`
+
+- `outs/trends/trend_analysis.md`  
+  趋势分析与研究空白 `trend analysis and research gaps`
+>>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
 
 ### 周报 Weekly Digest
 
 - `outs/digests/weekly_digest_latest.md`  
   最新周报 `latest digest`
+<<<<<<< HEAD
   
 - `outs/digests/weeklies/YYYY-MM-DD.md`  
   历史周报归档 `historical weekly archives`
   
+=======
+
+- `outs/digests/weeklies/YYYY-MM-DD.md`  
+  历史周报归档 `historical weekly archives`
+>>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
 
 ### 工作流状态 Workflow Monitoring
 
 - `outs/stats/pipeline_status.json`  
   当前运行状态 `current run status`
+<<<<<<< HEAD
   
 - `outs/stats/pipeline_history.json`  
   历史运行记录 `historical run records`
   
+=======
+
+- `outs/stats/pipeline_history.json`  
+  历史运行记录 `historical run records`
+>>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)
 
 ---
 
@@ -271,6 +296,33 @@ http://127.0.0.1:8765
 
 - `docs/readmes/usage.txt`  
   本地使用说明 `practical usage notes`
+<<<<<<< HEAD
   
 - `docs/analyses/project_analysis.md`  
   源码级项目分析 `source-level project analysis`
+=======
+
+- `docs/analyses/project_analysis.md`  
+  源码级项目分析 `source-level project analysis`
+
+---
+
+## 适合老师快速查看的内容 Suggested Files For Course Review
+
+如果老师只看几个关键文件，建议重点看：
+
+1. `README.md`
+2. `docs/analyses/project_analysis.md`
+3. `dats/cards/paper_cards.jsonl`
+4. `outs/taxons/taxonomy.md`
+5. `outs/tables/comparison_table.csv`
+6. `outs/trends/trend_analysis.md`
+7. `outs/digests/weekly_digest_latest.md`
+
+---
+
+## 一句话总结 One-Sentence Summary
+
+这个项目不是“让 AI 直接写综述”，而是“让 AI 参与一个可审计、可追踪、可增量更新的文献知识流水线”。  
+This project is not about asking AI to directly write a survey, but about using AI inside an auditable, traceable, incrementally updated literature knowledge pipeline.
+>>>>>>> 5aabcf7 (feat: add standalone viewer and tighten llm retry behavior)

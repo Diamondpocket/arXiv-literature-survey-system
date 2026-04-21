@@ -15,15 +15,13 @@ if (-not (Test-Path $python)) {
   --noconfirm `
   --clean `
   --onefile `
-  --name survey_dashboard_modern `
+  --name survey_viewer_standalone `
   --distpath "arts\dists" `
   --workpath "arts\builds" `
   --specpath "tls\builds" `
   --add-data "$projectRoot\uis;uis" `
-  --add-data "$projectRoot\dats;dats" `
-  --add-data "$projectRoot\outs;outs" `
-  pkgs\surveys\clis\dashboard.py
+  pkgs\surveys\clis\viewer.py
 
 Write-Host ""
 Write-Host "Build complete:" -ForegroundColor Green
-Write-Host (Join-Path $projectRoot "arts\dists\survey_dashboard_modern.exe")
+Write-Host (Join-Path $projectRoot "arts\dists\survey_viewer_standalone.exe")

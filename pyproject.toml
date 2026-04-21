@@ -18,6 +18,7 @@ dependencies = [
 lsss-run = "pkgs.surveys.clis.run:main"
 lsss-serve = "pkgs.surveys.clis.serve:main"
 lsss-dashboard = "pkgs.surveys.clis.dashboard:main"
+lsss-viewer = "pkgs.surveys.clis.viewer:main"
 
 [tool.setuptools]
 include-package-data = true

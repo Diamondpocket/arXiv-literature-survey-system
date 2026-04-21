@@ -18,8 +18,11 @@ jobs:
       OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
       OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-4o-mini' }}
       LLM_TEMPERATURE: "1"
-      LLM_RETRY_ATTEMPTS: "4"
-      LLM_RETRY_BACKOFF_SECONDS: "5"
+      LLM_REQUEST_TIMEOUT_SECONDS: "25"
+      OPENAI_MAX_RETRIES: "0"
+      LLM_RETRY_ATTEMPTS: "1"
+      LLM_RETRY_BACKOFF_SECONDS: "2"
+      LLM_MAX_TOTAL_RETRY_SECONDS: "6"
 
     steps:
       - name: Checkout repository

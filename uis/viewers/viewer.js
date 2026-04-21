@@ -1,11 +1,13 @@
 const viewerState = {
+  importBatches: [],
   rawPapers: [],
   cards: [],
   comparison: [],
-  taxonomy: "",
-  trend: "",
-  weekly: "",
+  taxonomyDocs: [],
+  trendDocs: [],
+  weeklyDocs: [],
   pipelineStatus: null,
+  pipelineStatuses: [],
   pipelineHistory: [],
   loadedFiles: [],
 };
@@ -57,6 +59,95 @@ function detectKind(path) {
     }
   }
   return null;
+}
+
+function safeSlug(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replaceAll("\\", "/")
+    .replace(/[^a-z0-9/_-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^[-/]+|[-/]+$/g, "");
+}
+
+function inferBatchLabel(files, fallback = "Imported Batch") {
+  const first = files.find((file) => normalizePath(file).includes("/"));
+  if (first) {
+    const root = normalizePath(first).split("/")[0];
+    if (root) return root;
+  }
+  return `${fallback} ${viewerState.importBatches.length + 1}`;
+}
+
+function uniqueBy(items, keyBuilder) {
+  const map = new Map();
+  items.forEach((item, index) => {
+    const key = keyBuilder(item, index);
+    if (!key) return;
+    if (!map.has(key)) map.set(key, item);
+  });
+  return Array.from(map.values());
+}
+
+function latestByTime(items, timeField) {
+  return [...items].sort((left, right) => {
+    const leftTime = new Date(left?.[timeField] || 0).getTime();
+    const rightTime = new Date(right?.[timeField] || 0).getTime();
+    return rightTime - leftTime;
+  })[0] || null;
+}
+
+function rebuildDerivedState() {
+  const batches = viewerState.importBatches;
+  viewerState.loadedFiles = batches.flatMap((batch) =>
+    batch.loadedFiles.map((item) => ({
+      ...item,
+      batchId: batch.id,
+      batchLabel: batch.label,
+    })),
+  );
+
+  viewerState.rawPapers = uniqueBy(
+    batches.flatMap((batch) => batch.rawPapers || []),
+    (item) => String(item.arxiv_id || item.entry_url || item.title || "").trim(),
+  );
+
+  viewerState.cards = uniqueBy(
+    batches.flatMap((batch) => batch.cards || []),
+    (item) => String(item.arxiv_id || item.source_url || item.title || "").trim(),
+  );
+
+  viewerState.comparison = uniqueBy(
+    batches.flatMap((batch) => batch.comparison || []).map((row) => ({
+      ...row,
+      __batch_label: row.__batch_label || "",
+    })),
+    (item) => `${String(item.title || "").trim()}::${String(item.method || "").trim()}`,
+  );
+
+  viewerState.taxonomyDocs = batches
+    .filter((batch) => batch.taxonomy)
+    .map((batch) => ({ label: batch.label, content: batch.taxonomy, id: batch.id }));
+  viewerState.trendDocs = batches
+    .filter((batch) => batch.trend)
+    .map((batch) => ({ label: batch.label, content: batch.trend, id: batch.id }));
+  viewerState.weeklyDocs = batches
+    .filter((batch) => batch.weekly)
+    .map((batch) => ({ label: batch.label, content: batch.weekly, id: batch.id }));
+
+  viewerState.pipelineStatuses = batches
+    .map((batch) => batch.pipelineStatus)
+    .filter((item) => item && typeof item === "object");
+  viewerState.pipelineStatus = latestByTime(viewerState.pipelineStatuses, "updated_at");
+
+  viewerState.pipelineHistory = uniqueBy(
+    batches.flatMap((batch) => (Array.isArray(batch.pipelineHistory) ? batch.pipelineHistory : [])),
+    (item, index) => String(item.run_id || item.updated_at || item.started_at || index),
+  ).sort((left, right) => {
+    const leftTime = new Date(left.updated_at || left.finished_at || left.started_at || 0).getTime();
+    const rightTime = new Date(right.updated_at || right.finished_at || right.started_at || 0).getTime();
+    return rightTime - leftTime;
+  });
 }
 
 function formatDateTime(value) {
@@ -215,6 +306,8 @@ async function loadFiles(fileList) {
   const files = Array.from(fileList || []);
   const mapped = {};
   const loadedFiles = [];
+  const batchLabel = inferBatchLabel(files);
+  const batchId = `${safeSlug(batchLabel) || "batch"}-${Date.now()}`;
 
   for (const file of files) {
     const relativePath = normalizePath(file);
@@ -225,44 +318,57 @@ async function loadFiles(fileList) {
       size: file.size,
       kind: kind || "unused",
     });
-    if (!kind || mapped[kind]) continue;
+    if (!kind) continue;
     mapped[kind] = file;
   }
 
-  viewerState.loadedFiles = loadedFiles;
-  viewerState.rawPapers = [];
-  viewerState.cards = [];
-  viewerState.comparison = [];
-  viewerState.taxonomy = "";
-  viewerState.trend = "";
-  viewerState.weekly = "";
-  viewerState.pipelineStatus = null;
-  viewerState.pipelineHistory = [];
+  const batch = {
+    id: batchId,
+    label: batchLabel,
+    loadedFiles,
+    rawPapers: [],
+    cards: [],
+    comparison: [],
+    taxonomy: "",
+    trend: "",
+    weekly: "",
+    pipelineStatus: null,
+    pipelineHistory: [],
+  };
 
   if (mapped.papersRaw) {
-    viewerState.rawPapers = JSON.parse(await readFileText(mapped.papersRaw));
+    batch.rawPapers = JSON.parse(await readFileText(mapped.papersRaw));
   }
   if (mapped.cards) {
-    viewerState.cards = parseJsonl(await readFileText(mapped.cards));
+    batch.cards = parseJsonl(await readFileText(mapped.cards)).map((item) => ({
+      ...item,
+      __batch_label: batchLabel,
+    }));
   }
   if (mapped.comparison) {
-    viewerState.comparison = csvToRows(await readFileText(mapped.comparison));
+    batch.comparison = csvToRows(await readFileText(mapped.comparison)).map((row) => ({
+      ...row,
+      __batch_label: batchLabel,
+    }));
   }
   if (mapped.taxonomy) {
-    viewerState.taxonomy = await readFileText(mapped.taxonomy);
+    batch.taxonomy = await readFileText(mapped.taxonomy);
   }
   if (mapped.trend) {
-    viewerState.trend = await readFileText(mapped.trend);
+    batch.trend = await readFileText(mapped.trend);
   }
   if (mapped.weekly) {
-    viewerState.weekly = await readFileText(mapped.weekly);
+    batch.weekly = await readFileText(mapped.weekly);
   }
   if (mapped.pipelineStatus) {
-    viewerState.pipelineStatus = JSON.parse(await readFileText(mapped.pipelineStatus));
+    batch.pipelineStatus = JSON.parse(await readFileText(mapped.pipelineStatus));
   }
   if (mapped.pipelineHistory) {
-    viewerState.pipelineHistory = JSON.parse(await readFileText(mapped.pipelineHistory));
+    batch.pipelineHistory = JSON.parse(await readFileText(mapped.pipelineHistory));
   }
+
+  viewerState.importBatches.push(batch);
+  rebuildDerivedState();
 }
 
 function currentSummary() {
@@ -270,6 +376,7 @@ function currentSummary() {
   const primaryModel =
     viewerState.cards[0]?.model || viewerState.cards.find((item) => item.model)?.model || "unknown";
   return {
+    batchCount: viewerState.importBatches.length,
     rawCount: Array.isArray(viewerState.rawPapers) ? viewerState.rawPapers.length : 0,
     cardCount: viewerState.cards.length,
     comparisonCount: viewerState.comparison.length,
@@ -283,25 +390,37 @@ function renderLoadSummary() {
   const used = viewerState.loadedFiles.filter((item) => item.kind !== "unused");
   const unused = viewerState.loadedFiles.filter((item) => item.kind === "unused");
   $("viewerLoadSummary").textContent = used.length
-    ? `已载入 ${used.length} 个识别文件，未使用 ${unused.length} 个文件。`
+    ? `已累计导入 ${viewerState.importBatches.length} 个批次，识别文件 ${used.length} 个，未使用 ${unused.length} 个。后续导入会继续追加，不会覆盖上一批。`
     : "尚未识别到目标文件。建议选择项目根目录，或至少包含 dats 与 outs。";
 }
 
 function renderLoadedFiles() {
   const target = $("loadedFilesPanel");
-  if (!viewerState.loadedFiles.length) {
+  if (!viewerState.importBatches.length) {
     target.innerHTML = `<p class="empty-state">还没有导入任何文件。</p>`;
     return;
   }
 
-  target.innerHTML = viewerState.loadedFiles
+  target.innerHTML = viewerState.importBatches
     .map(
-      (item) => `
-        <div class="loaded-file-item ${item.kind === "unused" ? "unused" : ""}">
-          <strong>${escapeHtml(item.name)}</strong>
-          <span>${escapeHtml(item.relativePath || item.name)}</span>
-          <span>${escapeHtml(item.kind)}</span>
-        </div>
+      (batch) => `
+        <section class="loaded-batch">
+          <div class="loaded-batch-head">
+            <strong>${escapeHtml(batch.label)}</strong>
+            <span>${escapeHtml(batch.loadedFiles.length)} files</span>
+          </div>
+          ${batch.loadedFiles
+            .map(
+              (item) => `
+                <div class="loaded-file-item ${item.kind === "unused" ? "unused" : ""}">
+                  <strong>${escapeHtml(item.name)}</strong>
+                  <span>${escapeHtml(item.relativePath || item.name)}</span>
+                  <span>${escapeHtml(item.kind)}</span>
+                </div>
+              `,
+            )
+            .join("")}
+        </section>
       `,
     )
     .join("");
@@ -310,12 +429,12 @@ function renderLoadedFiles() {
 function renderViewerMetrics() {
   const summary = currentSummary();
   const metrics = [
+    { label: "Imported batches", value: summary.batchCount },
     { label: "Raw papers", value: summary.rawCount },
     { label: "Paper cards", value: summary.cardCount },
     { label: "Comparison rows", value: summary.comparisonCount },
     { label: "Primary model", value: summary.model },
     { label: "Workflow status", value: summary.status },
-    { label: "Updated at", value: summary.updatedAt ? formatDateTime(summary.updatedAt) : "unknown" },
   ];
 
   $("viewerMetrics").innerHTML = metrics
@@ -378,15 +497,26 @@ function renderStatusBand() {
 }
 
 function renderMarkdownPanels() {
-  $("viewerWeeklyPanel").innerHTML = viewerState.weekly
-    ? markdownToHtml(viewerState.weekly)
-    : `<p class="empty-state">未加载 weekly_digest_latest.md。</p>`;
-  $("viewerTaxonomyPanel").innerHTML = viewerState.taxonomy
-    ? markdownToHtml(viewerState.taxonomy)
-    : `<p class="empty-state">未加载 taxonomy.md。</p>`;
-  $("viewerTrendPanel").innerHTML = viewerState.trend
-    ? markdownToHtml(viewerState.trend)
-    : `<p class="empty-state">未加载 trend_analysis.md。</p>`;
+  function renderDocStack(targetId, docs, emptyMessage) {
+    $(targetId).innerHTML = docs.length
+      ? docs
+          .map(
+            (doc) => `
+              <section class="viewer-doc-stack">
+                <div class="viewer-doc-head">
+                  <strong>${escapeHtml(doc.label)}</strong>
+                </div>
+                <div class="viewer-doc-body">${markdownToHtml(doc.content)}</div>
+              </section>
+            `,
+          )
+          .join("")
+      : `<p class="empty-state">${emptyMessage}</p>`;
+  }
+
+  renderDocStack("viewerWeeklyPanel", viewerState.weeklyDocs, "未加载 weekly_digest_latest.md。");
+  renderDocStack("viewerTaxonomyPanel", viewerState.taxonomyDocs, "未加载 taxonomy.md。");
+  renderDocStack("viewerTrendPanel", viewerState.trendDocs, "未加载 trend_analysis.md。");
 }
 
 function populateCategoryOptions() {
@@ -485,6 +615,7 @@ function renderCards() {
             <div>
               <h3>${escapeHtml(card.title || "unknown")}</h3>
               <div class="paper-meta-line">
+                <span>${escapeHtml(card.__batch_label || "imported")}</span>
                 <span>${escapeHtml(card.best_fit_category || "unknown")}</span>
                 <span>${escapeHtml(card.innovation_type || "unknown")}</span>
                 <span>${escapeHtml(card.confidence_level || "unknown")}</span>
@@ -524,13 +655,15 @@ function renderAll() {
 }
 
 function resetViewer() {
+  viewerState.importBatches = [];
   viewerState.rawPapers = [];
   viewerState.cards = [];
   viewerState.comparison = [];
-  viewerState.taxonomy = "";
-  viewerState.trend = "";
-  viewerState.weekly = "";
+  viewerState.taxonomyDocs = [];
+  viewerState.trendDocs = [];
+  viewerState.weeklyDocs = [];
   viewerState.pipelineStatus = null;
+  viewerState.pipelineStatuses = [];
   viewerState.pipelineHistory = [];
   viewerState.loadedFiles = [];
   $("viewerSearchInput").value = "";
@@ -552,6 +685,20 @@ async function tryLoadBundledSample() {
   ];
 
   const loaded = [];
+  const batchLabel = "Bundled Sample";
+  const batch = {
+    id: `bundled-sample-${Date.now()}`,
+    label: batchLabel,
+    loadedFiles: loaded,
+    rawPapers: [],
+    cards: [],
+    comparison: [],
+    taxonomy: "",
+    trend: "",
+    weekly: "",
+    pipelineStatus: null,
+    pipelineHistory: [],
+  };
 
   for (const [url, kind] of candidates) {
     try {
@@ -559,20 +706,25 @@ async function tryLoadBundledSample() {
       if (!response.ok) continue;
       const text = await response.text();
       loaded.push({ name: url.split("/").pop(), relativePath: url, size: text.length, kind });
-      if (kind === "papersRaw") viewerState.rawPapers = JSON.parse(text);
-      if (kind === "cards") viewerState.cards = parseJsonl(text);
-      if (kind === "comparison") viewerState.comparison = csvToRows(text);
-      if (kind === "taxonomy") viewerState.taxonomy = text;
-      if (kind === "trend") viewerState.trend = text;
-      if (kind === "weekly") viewerState.weekly = text;
-      if (kind === "pipelineStatus") viewerState.pipelineStatus = JSON.parse(text);
-      if (kind === "pipelineHistory") viewerState.pipelineHistory = JSON.parse(text);
+      if (kind === "papersRaw") batch.rawPapers = JSON.parse(text);
+      if (kind === "cards") {
+        batch.cards = parseJsonl(text).map((item) => ({ ...item, __batch_label: batchLabel }));
+      }
+      if (kind === "comparison") {
+        batch.comparison = csvToRows(text).map((row) => ({ ...row, __batch_label: batchLabel }));
+      }
+      if (kind === "taxonomy") batch.taxonomy = text;
+      if (kind === "trend") batch.trend = text;
+      if (kind === "weekly") batch.weekly = text;
+      if (kind === "pipelineStatus") batch.pipelineStatus = JSON.parse(text);
+      if (kind === "pipelineHistory") batch.pipelineHistory = JSON.parse(text);
     } catch (error) {
       // Ignore missing bundled sample files.
     }
   }
 
-  viewerState.loadedFiles = loaded;
+  viewerState.importBatches.push(batch);
+  rebuildDerivedState();
   renderAll();
 }
 
@@ -584,11 +736,13 @@ function bindEvents() {
 
   $("folderPicker").addEventListener("change", async (event) => {
     await loadFiles(event.target.files);
+    event.target.value = "";
     renderAll();
   });
 
   $("filePicker").addEventListener("change", async (event) => {
     await loadFiles(event.target.files);
+    event.target.value = "";
     renderAll();
   });
 

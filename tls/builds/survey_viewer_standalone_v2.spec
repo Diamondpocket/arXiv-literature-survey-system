@@ -2,10 +2,10 @@
 
 
 a = Analysis(
-    ['..\\..\\pkgs\\surveys\\clis\\dashboard.py'],
+    ['..\\..\\pkgs\\surveys\\clis\\viewer.py'],
     pathex=[],
     binaries=[],
-    datas=[('C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\uis', 'uis'), ('C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\dats', 'dats'), ('C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\outs', 'outs')],
+    datas=[('C:\\Users\\86515\\Documents\\Codex\\literature-survey-system\\uis', 'uis')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='survey_dashboard_modern',
+    name='survey_viewer_standalone_v2',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
