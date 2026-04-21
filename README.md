@@ -274,25 +274,3 @@ http://127.0.0.1:8765
   
 - `docs/analyses/project_analysis.md`  
   源码级项目分析 `source-level project analysis`
-  
-
----
-
-## 适合老师快速查看的内容 Suggested Files For Course Review
-
-如果老师只看几个关键文件，建议重点看：
-
-1. `README.md`
-2. `docs/analyses/project_analysis.md`
-3. `dats/cards/paper_cards.jsonl`
-4. `outs/taxons/taxonomy.md`
-5. `outs/tables/comparison_table.csv`
-6. `outs/trends/trend_analysis.md`
-7. `outs/digests/weekly_digest_latest.md`
-
----
-
-## 一句话总结 One-Sentence Summary
-
-这个项目不是“让 AI 直接写综述”，而是“让 AI 参与一个可审计、可追踪、可增量更新的文献知识流水线”。  
-This project is not about asking AI to directly write a survey, but about using AI inside an auditable, traceable, incrementally updated literature knowledge pipeline.
