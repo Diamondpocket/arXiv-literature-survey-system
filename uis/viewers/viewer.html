@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Literature Survey Viewer</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+  </head>
+  <body class="viewer-body">
+    <main class="shell viewer-shell">
+      <section class="topbar viewer-topbar">
+        <div class="topbar-copy">
+          <p class="eyebrow">Standalone Viewer</p>
+          <h1>文献综述结果查看器</h1>
+          <p class="lede">
+            这是一个纯前端查看器。选择项目根目录、`dats + outs` 目录，或者手动选择生成产物文件后，
+            页面会直接在浏览器里解析 `json / jsonl / csv / md`，不依赖本地 Python 服务。
+          </p>
+
+          <div class="viewer-import-grid">
+            <label class="import-card" for="folderPicker">
+              <span class="import-card-kicker">推荐</span>
+              <strong>选择整个目录</strong>
+              <span>直接选择项目根目录，或至少包含 `dats/` 与 `outs/` 的目录。</span>
+            </label>
+            <label class="import-card" for="filePicker">
+              <span class="import-card-kicker">兼容</span>
+              <strong>手动选择文件</strong>
+              <span>适合只想查看部分产物，或浏览器不支持目录导入时使用。</span>
+            </label>
+          </div>
+
+          <div class="viewer-controls">
+            <input id="folderPicker" type="file" webkitdirectory directory multiple hidden />
+            <input
+              id="filePicker"
+              type="file"
+              multiple
+              hidden
+              accept=".json,.jsonl,.csv,.md,text/markdown,application/json,text/plain"
+            />
+            <button id="pickFolderButton" type="button">选择目录</button>
+            <button id="pickFilesButton" type="button" class="secondary-button">选择文件</button>
+            <button id="loadSampleButton" type="button" class="secondary-button">载入当前仓库示例</button>
+            <button id="clearViewerButton" type="button" class="ghost-button">清空</button>
+          </div>
+
+          <div id="viewerLoadSummary" class="viewer-load-summary">
+            尚未载入文件。请先选择目录或文件。
+          </div>
+        </div>
+      </section>
+
+      <section class="metrics" id="viewerMetrics" aria-label="viewer metrics"></section>
+
+      <section class="viewer-layout">
+        <aside class="filters viewer-sidebar">
+          <div class="filter-head">
+            <p class="section-kicker">Loaded Files</p>
+            <h3>已载入文件</h3>
+          </div>
+          <div id="loadedFilesPanel" class="loaded-files-panel"></div>
+
+          <div class="filter-head viewer-filter-head">
+            <p class="section-kicker">Card Filter</p>
+            <h3>论文卡片过滤</h3>
+          </div>
+
+          <label>
+            搜索
+            <input id="viewerSearchInput" type="search" placeholder="title, method, dataset..." />
+          </label>
+          <label>
+            分类
+            <select id="viewerCategorySelect">
+              <option value="">All categories</option>
+            </select>
+          </label>
+          <label>
+            置信度
+            <select id="viewerConfidenceSelect">
+              <option value="">All confidence</option>
+              <option value="high">high</option>
+              <option value="medium">medium</option>
+              <option value="low">low</option>
+            </select>
+          </label>
+          <button id="viewerRefreshButton" type="button">刷新视图</button>
+          <p class="hint">
+            推荐至少导入这些文件：<code>papers_raw.json</code>、<code>paper_cards.jsonl</code>、
+            <code>comparison_table.csv</code>、<code>taxonomy.md</code>、
+            <code>trend_analysis.md</code>、<code>weekly_digest_latest.md</code>。
+          </p>
+        </aside>
+
+        <section class="viewer-main">
+          <section class="monitor-band viewer-status-band" aria-label="viewer status">
+            <div class="monitor-head">
+              <div>
+                <p class="eyebrow">Status Snapshot</p>
+                <h2>运行状态快照</h2>
+                <p id="viewerMonitorHeadline" class="monitor-headline">
+                  等待加载 `pipeline_status.json` 或其他统计文件。
+                </p>
+              </div>
+              <div id="viewerMonitorMeta" class="monitor-meta"></div>
+            </div>
+            <div id="viewerStageStrip" class="stage-strip"></div>
+          </section>
+
+          <section class="panels report-first viewer-report-grid">
+            <article>
+              <div class="section-heading">
+                <div>
+                  <p class="section-kicker">Digest</p>
+                  <h2>每周文献综述</h2>
+                </div>
+                <span>weekly</span>
+              </div>
+              <div id="viewerWeeklyPanel" class="markdown viewer-scroll-panel"></div>
+            </article>
+
+            <article>
+              <div class="section-heading">
+                <div>
+                  <p class="section-kicker">Taxonomy</p>
+                  <h2>分类体系</h2>
+                </div>
+                <span>taxonomy</span>
+              </div>
+              <div id="viewerTaxonomyPanel" class="markdown viewer-scroll-panel"></div>
+            </article>
+
+            <article>
+              <div class="section-heading">
+                <div>
+                  <p class="section-kicker">Trends</p>
+                  <h2>趋势分析</h2>
+                </div>
+                <span>trend</span>
+              </div>
+              <div id="viewerTrendPanel" class="markdown viewer-scroll-panel"></div>
+            </article>
+          </section>
+
+          <section class="comparison">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Comparison Matrix</p>
+                <h2>方法对比表</h2>
+              </div>
+              <span id="viewerComparisonCount">0 rows</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Method</th>
+                    <th>Complexity</th>
+                    <th>Scenario</th>
+                    <th>Data</th>
+                    <th>Category</th>
+                  </tr>
+                </thead>
+                <tbody id="viewerComparisonBody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="workspace viewer-card-workspace">
+            <section class="papers viewer-papers-only">
+              <div class="section-heading">
+                <div>
+                  <p class="section-kicker">Paper Library</p>
+                  <h2>论文卡片</h2>
+                </div>
+                <span id="viewerPaperCount">0 papers</span>
+              </div>
+              <div id="viewerCardsList" class="cards-list"></div>
+            </section>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="./viewer.js"></script>
+  </body>
+</html>

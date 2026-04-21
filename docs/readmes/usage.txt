@@ -1,0 +1,154 @@
+arXiv Literature Survey System
+==============================
+
+Overview
+--------
+This project is an automated literature tracking and weekly survey generation
+system for arXiv papers. The default topic is Retrieval-Augmented Generation
+(RAG). The project is organized as a package-based local system instead of a
+flat script collection.
+
+Current Directory Layout
+------------------------
+pkgs/
+  Python package source code
+
+cfgs/
+  Environment and dependency configuration
+
+dats/
+  Raw paper metadata and structured paper cards
+
+outs/
+  Taxonomy, comparison table, trends, weekly digests, and workflow status
+
+uis/
+  Dashboard UI, standalone viewer, and static assets
+
+tls/
+  Build tools and PyInstaller files
+
+arts/
+  Build outputs, logs, and release archives
+
+docs/
+  Readme-style documentation and analysis notes
+
+Main Python Modules
+-------------------
+pkgs/surveys/clis/run.py
+  Full pipeline entry point
+
+pkgs/surveys/clis/serve.py
+  Local dashboard server entry point
+
+pkgs/surveys/clis/dashboard.py
+  Opens the dashboard in a browser on an available local port
+
+pkgs/surveys/fetchers/arxivs.py
+  Fetches arXiv papers and writes dats/raws/papers_raw.json
+
+pkgs/surveys/cards/generators.py
+  Generates structured JSONL paper cards
+
+pkgs/surveys/analyses/clusters.py
+  Generates taxonomy, comparison table, and trend analysis
+
+pkgs/surveys/analyses/weeklies.py
+  Generates weekly digest files
+
+pkgs/surveys/clients/llms.py
+  OpenAI-compatible LLM client with mock fallback and retry logic
+
+pkgs/surveys/webs/servers.py
+  Local dashboard API and static-file server
+
+Two Ways To View Results
+------------------------
+1. Live local dashboard
+
+   Windows PowerShell:
+   .\.venv\Scripts\python.exe -m pkgs.surveys.clis.serve --host 127.0.0.1 --port 8765
+
+   Then open:
+   http://127.0.0.1:8765
+
+2. Standalone local viewer
+
+   Option A:
+   python -m http.server 8877
+
+   Then open:
+   http://127.0.0.1:8877/uis/viewers/viewer.html
+
+   Option B:
+   Open viewer.html and manually select generated files from dats/ and outs/
+
+Recommended Files For The Standalone Viewer
+-------------------------------------------
+dats/raws/papers_raw.json
+dats/cards/paper_cards.jsonl
+outs/tables/comparison_table.csv
+outs/taxons/taxonomy.md
+outs/trends/trend_analysis.md
+outs/digests/weekly_digest_latest.md
+outs/stats/pipeline_status.json
+outs/stats/pipeline_history.json
+
+Recommended Development Run
+---------------------------
+For local smoke tests, do not fetch 100 papers every time.
+
+Windows PowerShell:
+.\.venv\Scripts\python.exe -m pkgs.surveys.clis.run --max_results 8 --card_limit 2 --batch_size 1 --no_llm_taxonomy --no_llm_weekly
+
+Current GitHub Actions test workflow:
+python -m pkgs.surveys.clis.run --max_results 10 --card_limit 5
+
+Environment Variables
+---------------------
+Copy cfgs/envs/.env.example to cfgs/envs/.env for local runs.
+
+Important fields:
+OPENAI_API_KEY
+OPENAI_BASE_URL
+OPENAI_MODEL
+LLM_TEMPERATURE
+
+Mock Mode
+---------
+If no API key is configured, the system can fall back to mock mode so the
+pipeline still runs end to end.
+
+Important:
+Mock output is only for workflow testing and UI testing.
+Mock output must not be used as the final course submission.
+
+Key Output Files
+----------------
+dats/raws/papers_raw.json
+  Raw arXiv metadata
+
+dats/cards/paper_cards.jsonl
+  Structured per-paper JSON cards
+
+outs/taxons/taxonomy.md
+  Taxonomy summary
+
+outs/tables/comparison_table.csv
+  Method comparison table
+
+outs/trends/trend_analysis.md
+  Trend analysis and research gaps
+
+outs/digests/weekly_digest_latest.md
+  Latest weekly digest
+
+outs/digests/weeklies/YYYY-MM-DD.md
+  Historical weekly digests
+
+outs/stats/pipeline_status.json
+  Current run status snapshot
+
+outs/stats/pipeline_history.json
+  Historical run records
