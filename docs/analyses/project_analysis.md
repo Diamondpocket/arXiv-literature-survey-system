@@ -1,6 +1,8 @@
-# 文献自动综述生成系统源码分析 Project Source Analysis
+# 文献自动综述生成系统源码分析
+# Project Source Analysis for arXiv Literature Survey System
 
-本文基于当前仓库真实代码结构编写，目标不是做 README 级功能简介，而是帮助你顺着源码看懂这个项目怎样运行、为什么这样设计、以及各模块怎样彼此配合。
+本文基于当前仓库的真实代码结构编写，目标不是做 README 级别的泛泛介绍，而是帮助你真正看懂这个项目是怎么工作的。  
+This document is based on the actual repository structure and aims to help you understand how the system really works.
 
 项目根目录 Project Root:
 
@@ -12,15 +14,17 @@ C:\Users\86515\Documents\Codex\literature-survey-system
 
 ## 1. 项目总览 Project Overview
 
-这个项目 `arxiv-literature-survey-system` 是一个围绕 arXiv 论文的自动化知识流水线 `pipeline system`。默认主题是 `Retrieval-Augmented Generation, RAG`，但查询词 `query` 和主题标签 `topic` 都可以配置。
+这个项目 `arXiv Literature Survey System` 是一个围绕 `arXiv` 文献构建的自动化知识流水线 `knowledge pipeline`。  
+默认主题是 `Retrieval-Augmented Generation, RAG`，但查询词 `query` 和主题 `topic` 都可以调整。
 
-它解决的问题不是“直接让大模型代写综述”，而是把综述工作拆成一条可验证的分析链路：
+它要解决的问题不是“自动生成一篇漂亮文章”这么简单，而是把文献综述任务拆解成可验证的几个步骤：
 
-1. 从 arXiv 抓取原始论文元数据 `raw metadata`
-2. 把标题和摘要转成结构化论文卡片 `structured paper cards`
-3. 基于卡片生成分类体系 `taxonomy`、对比表 `comparison table`、趋势分析 `trend analysis`
-4. 再从这些中间产物生成每周综述 `weekly digest`
-5. 通过本地 Dashboard 和 Viewer 查看当前状态与历史结果
+1. 抓取论文 `fetch papers`
+2. 保存原始元数据 `raw metadata`
+3. 抽取结构化卡片 `structured paper cards`
+4. 聚合生成 taxonomy、comparison、trend
+5. 生成 weekly digest
+6. 通过 UI 和状态文件展示执行过程
 
 输入 Input:
 
@@ -44,13 +48,12 @@ C:\Users\86515\Documents\Codex\literature-survey-system
 
 核心价值 Core Value:
 
-这个项目训练的是结构化知识系统设计 `structured knowledge system design`。大模型 `LLM` 在这里主要承担“结构化分析模块 `analysis module`”的职责，而不是直接充当写手。
+这个项目真正训练的是结构化知识系统设计 `structured knowledge system design`。  
+The LLM is used as an analysis module, not as a direct ghostwriter.
 
 ---
 
 ## 2. 项目整体结构 Overall Structure
-
-当前目录树 Current Directory Tree:
 
 ```text
 literature-survey-system/
@@ -82,6 +85,7 @@ literature-survey-system/
       project_analysis.md
     readmes/
       usage.txt
+      viewer_usage.md
 
   outs/
     digests/
@@ -110,6 +114,7 @@ literature-survey-system/
         dashboard.py
         run.py
         serve.py
+        viewer.py
       fetchers/
         arxivs.py
       metas/
@@ -126,124 +131,131 @@ literature-survey-system/
     taxons/
       taxonomy_generation.txt
 
+  snps/
+    imports/
+    weeklies/
+
   tls/
     builds/
-      build_dashboard_exe.ps1
-      survey_dashboard_modern.spec
+      *.spec
+      *.ps1
 
   tsts/
 
   uis/
     assets/
-      knowledge-map.png
       styles.css
     dashboards/
-      app.js
       index.html
+      app.js
     viewers/
       viewer.html
       viewer.js
-
-  .gitignore
-  pyproject.toml
 ```
 
-目录职责 Directory Roles:
+角色划分 Role Split:
 
-- 入口命令 Entry Commands
+- 入口层 Entry Layer
   - `pkgs/surveys/clis/run.py`
   - `pkgs/surveys/clis/serve.py`
-  - `pkgs/surveys/clis/dashboard.py`
-
-- 核心业务逻辑 Core Logic
-  - `pkgs/surveys/fetchers/arxivs.py`
-  - `pkgs/surveys/cards/generators.py`
-  - `pkgs/surveys/analyses/clusters.py`
-  - `pkgs/surveys/analyses/weeklies.py`
-  - `pkgs/surveys/clients/llms.py`
-
-- 元数据与路径管理 Metadata and Paths
-  - `pkgs/surveys/metas/paths.py`
-  - `pkgs/surveys/metas/workflows.py`
-
-- 本地 Web 展示 Local Web UI
-  - `pkgs/surveys/webs/servers.py`
+  - `pkgs/surveys/clis/viewer.py`
+- 核心业务 Core Logic
+  - `fetchers/`
+  - `cards/`
+  - `analyses/`
+  - `clients/`
+- 元数据与路径 Metadata and Paths
+  - `metas/paths.py`
+  - `metas/workflows.py`
+- 展示层 UI Layer
+  - `webs/servers.py`
   - `uis/dashboards/*`
   - `uis/viewers/*`
-
 - 配置与提示词 Config and Prompts
-  - `cfgs/envs/.env.example`
-  - `cfgs/pkgs/requirements.txt`
+  - `cfgs/*`
   - `pmts/*`
-
-- 数据与产物 Data and Artifacts
+- 输出与归档 Outputs and Archives
   - `dats/*`
   - `outs/*`
-
-- 打包工具 Packaging Tools
-  - `tls/builds/build_dashboard_exe.ps1`
-  - `tls/builds/survey_dashboard_modern.spec`
+  - `snps/*`
 
 ---
 
 ## 3. 核心模块构成 Core Components
 
-| 模块 Module | 责任 Responsibility | 输入 Input | 输出 Output | 依赖 Dependencies | 被谁调用 Called By |
+| 模块 Module | 职责 Responsibility | 输入 Input | 输出 Output | 依赖 Dependencies | 被谁调用 Called By |
 |---|---|---|---|---|---|
-| `pkgs.surveys.clis.run` | 串联完整主流程，写状态和历史 | CLI args, prompts, local files | 所有 `dats` 与 `outs` 产物 | 内部所有核心模块 | 用户、GitHub Actions |
-| `pkgs.surveys.fetchers.arxivs` | 从 arXiv 抓取论文并去重 | `query`, `years`, `max_results` | `dats/raws/papers_raw.json` | `arxiv` package | `pkgs.surveys.clis.run` |
-| `pkgs.surveys.cards.generators` | 生成结构化 JSONL 卡片 | raw papers, card prompt | `dats/cards/paper_cards.jsonl` | `pkgs.surveys.clients.llms` | `pkgs.surveys.clis.run` |
-| `pkgs.surveys.analyses.clusters` | 生成 taxonomy、comparison、trend | paper cards | `outs/taxons/taxonomy.md`, `outs/tables/comparison_table.csv`, `outs/trends/trend_analysis.md` | `pandas`, optional LLM | `pkgs.surveys.clis.run` |
-| `pkgs.surveys.analyses.weeklies` | 生成 weekly digest | cards + analysis artifacts | `outs/digests/*` | `pkgs.surveys.clients.llms` | `pkgs.surveys.clis.run` |
-| `pkgs.surveys.clients.llms` | LLM 调用、mock fallback、重试 | prompt, input data | JSON or text | OpenAI-compatible API | cards / analyses |
-| `pkgs.surveys.metas.paths` | 集中定义路径常量和运行时路径 | none | path constants | `pathlib` | 多个模块 |
-| `pkgs.surveys.metas.workflows` | 集中定义阶段标签与状态结构 | none | stage metadata | none | `run.py`, `servers.py` |
-| `pkgs.surveys.webs.servers` | 本地 API + 静态文件服务 | local `dats` and `outs` | dashboard/viewer data endpoints | `http.server` | `serve.py`, `dashboard.py` |
+| `pkgs.surveys.clis.run` | 串联完整 pipeline，并维护状态文件 | CLI args, prompts, envs | `dats/*`, `outs/*`, `pipeline_status.json` | internal modules | user, GitHub Actions |
+| `pkgs.surveys.fetchers.arxivs` | 调用 arXiv API，抓取并去重 | `query`, `years`, `max_results` | `dats/raws/papers_raw.json` | `arxiv` | `run.py` |
+| `pkgs.surveys.cards.generators` | 为论文生成结构化卡片 | raw papers, card prompt | `dats/cards/paper_cards.jsonl` | `llms.py` | `run.py` |
+| `pkgs.surveys.analyses.clusters` | 生成 taxonomy、comparison、trend | cards | `taxonomy.md`, `comparison_table.csv`, `trend_analysis.md` | `pandas`, optional LLM | `run.py` |
+| `pkgs.surveys.analyses.weeklies` | 生成每周综述 | cards + analysis artifacts | weekly digest markdown | `llms.py` | `run.py` |
+| `pkgs.surveys.clients.llms` | 封装 LLM 调用、重试、mock fallback | prompt, input payload | text or JSON | OpenAI-compatible API | cards, analyses |
+| `pkgs.surveys.metas.paths` | 统一管理路径与运行时路径 | none | path constants | `pathlib`, `sys` | almost all modules |
+| `pkgs.surveys.metas.workflows` | 统一定义 stage metadata | none | stage schema | none | `run.py`, `servers.py` |
+| `pkgs.surveys.webs.servers` | 提供 dashboard API 和静态页面 | `dats/*`, `outs/*` | local HTTP endpoints | `http.server` | `serve.py` |
+| `pkgs.surveys.clis.viewer` | 独立查看器本地服务与导入读取 | imported folders, zip, files | viewer HTTP endpoints | `http.server`, `zipfile` | user, exe |
 
 ---
 
 ## 4. 完整工作流 End-to-End Workflow
 
-主流程 Main Workflow:
+主流程 Main Pipeline:
 
 ```text
-pkgs/surveys/clis/run.py
-  -> pkgs/surveys/fetchers/arxivs.py
-  -> pkgs/surveys/cards/generators.py
-  -> pkgs/surveys/analyses/clusters.py
-  -> pkgs/surveys/analyses/weeklies.py
+python -m pkgs.surveys.clis.run
+  -> fetch papers from arXiv
+  -> write dats/raws/papers_raw.json
+  -> generate structured paper cards
+  -> write dats/cards/paper_cards.jsonl
+  -> build taxonomy / comparison / trend
+  -> write outs/*
+  -> build weekly digest
+  -> write weekly markdown
+  -> update pipeline status and history
 ```
 
-状态监控 Workflow Monitoring:
+监控流程 Monitoring Workflow:
 
 ```text
-pkgs/surveys/clis/run.py
+run.py
   -> outs/stats/pipeline_status.json
   -> outs/stats/pipeline_history.json
 ```
 
-本地查看链路 Local Viewing Workflow:
+本地 Dashboard 流程 Local Dashboard Workflow:
 
 ```text
-pkgs/surveys/clis/serve.py
-  -> pkgs/surveys/webs/servers.py
-  -> reads dats/* + outs/*
-  -> serves uis/dashboards/* + uis/viewers/*
+python -m pkgs.surveys.clis.serve
+  -> pkgs.surveys.webs.servers
+  -> read dats/* and outs/*
+  -> serve uis/dashboards/index.html + app.js
+```
+
+独立查看器流程 Standalone Viewer Workflow:
+
+```text
+python -m pkgs.surveys.clis.viewer
+  or survey_viewer_standalone_v5.exe
+  -> create snps/imports
+  -> scan imported folders / zips / loose files
+  -> parse dats/* and outs/*
+  -> serve uis/viewers/viewer.html + viewer.js
 ```
 
 流程图 Workflow Diagram:
 
 ```mermaid
 flowchart TD
-    A["pkgs.surveys.clis.run"] --> B["pkgs.surveys.fetchers.arxivs.fetch_papers"]
+    A["pkgs.surveys.clis.run"] --> B["fetchers.arxivs.fetch_papers"]
     B --> C["dats/raws/papers_raw.json"]
-    C --> D["pkgs.surveys.cards.generators.generate_cards"]
+    C --> D["cards.generators.generate_cards"]
     D --> E["dats/cards/paper_cards.jsonl"]
-    E --> F["pkgs.surveys.analyses.clusters.run_analysis"]
+    E --> F["analyses.clusters.run_analysis"]
     F --> G["outs/taxons/taxonomy.md"]
     F --> H["outs/tables/comparison_table.csv"]
     F --> I["outs/trends/trend_analysis.md"]
-    E --> J["pkgs.surveys.analyses.weeklies.generate_weekly_digest"]
+    E --> J["analyses.weeklies.generate_weekly_digest"]
     G --> J
     H --> J
     I --> J
@@ -251,13 +263,12 @@ flowchart TD
     J --> L["outs/digests/weeklies/YYYY-MM-DD.md"]
     A --> M["outs/stats/pipeline_status.json"]
     A --> N["outs/stats/pipeline_history.json"]
-    O["pkgs.surveys.webs.servers"] --> M
+    O["webs.servers"] --> M
     O --> N
     O --> E
-    O --> G
-    O --> H
-    O --> I
-    O --> K
+    P["clis.viewer"] --> Q["snps/imports"]
+    Q --> R["viewer batches"]
+    R --> S["uis/viewers/viewer.html"]
 ```
 
 ---
@@ -266,20 +277,23 @@ flowchart TD
 
 ### 5.1 分阶段流水线 Stage-Based Pipeline
 
-项目采用的是分阶段流水线 `stage-based pipeline`，而不是一个大脚本一次性完成全部工作。原因很实际：
+项目不是一个“大脚本一把梭”，而是一个分阶段流水线 `stage-based pipeline`。
 
-1. 每一步都有独立输入输出，便于调试
-2. 中间结果可保存，满足课程的“可审计性 `auditability`”
-3. 增量更新更容易实现
-4. 失败时可以定位具体阶段，而不是整条链路一锅端
+这样设计的原因：
+
+1. 每一步都有独立输入输出，便于调试。
+2. 中间结果会落盘，满足课程的可审计性 `auditability`。
+3. 更容易做增量更新 `incremental update`。
+4. 出错时可以定位到具体阶段，而不是整条链路都黑箱化。
 
 ### 5.2 结构化优先 Structured-First Design
 
-本系统的关键原则是：
+系统遵循一个关键原则：
 
-> 先结构化，再总结；先卡片，再综述。
+> 先结构化，再总结。  
+> Structure first, summarize later.
 
-也就是先生成每篇论文的结构化字段：
+也就是说，先把每篇论文变成标准字段：
 
 - `problem`
 - `key_idea`
@@ -292,37 +306,31 @@ flowchart TD
 - `best_fit_category`
 - `confidence_level`
 
-然后 taxonomy、comparison、trend、weekly digest 全部基于这些字段生成，而不是直接拼摘要。
+然后 taxonomy、comparison、trend 和 weekly digest 全都建立在这些字段之上。  
+This is why the project is a structured analysis system rather than a summary concatenator.
 
-### 5.3 增量处理 Incremental Update
+### 5.3 增量更新 Incremental Update
 
-`pkgs/surveys/cards/generators.py` 先读取已有 `paper_cards.jsonl`，按 `arxiv_id` 构建索引，只处理新增论文。这样做有三个好处：
-
-1. 节省 API 调用成本
-2. 保持已有结果稳定
-3. 支持每周持续更新，而不是每次从零开始
+`pkgs/surveys/cards/generators.py` 会先读取已有的 `paper_cards.jsonl`，按 `arxiv_id` 建索引，只处理新论文。  
+This saves API cost, keeps old outputs stable, and makes weekly updating practical.
 
 ### 5.4 可观测性 Observability
 
-`pkgs/surveys/clis/run.py` 不只负责执行，还负责持续写入运行状态。它维护两类状态文件：
+`run.py` 不只是调度器，它还负责持续维护工作流状态：
 
-- `outs/stats/pipeline_status.json`
-  - 当前这次运行到了哪一步
-  - 当前阶段的进度、详情、最近事件
+- 当前阶段 `current_stage`
+- 整体状态 `status`
+- 最近事件 `recent_events`
+- 最近新增论文 `recent_new_papers`
+- 阶段进度 `progress_current`, `progress_total`, `progress_percent`
 
-- `outs/stats/pipeline_history.json`
-  - 过去若干次运行的摘要
-  - 方便前端显示历史记录
+因此这个项目不仅“能跑”，而且“能被看见怎么跑”。  
+The system is observable, not opaque.
 
-所以这个项目不仅是“会跑”，还是“看得见怎么跑”。
+### 5.5 本地轻服务 Local Lightweight Service
 
-### 5.5 本地 Web 服务 Local Web Serving
-
-`pkgs/surveys/webs/servers.py` 使用的是标准库 `http.server`，不是 Flask 或 FastAPI。原因是当前需求更像一个轻量本地查看器 `local viewer`：
-
-1. 依赖少
-2. 打包成 EXE 更轻
-3. 足够支持静态页面 + JSON API
+`pkgs/surveys/webs/servers.py` 和 `pkgs/surveys/clis/viewer.py` 都采用标准库 `http.server` 路线，而不是完整 Web 框架。  
+That choice keeps the project lightweight, easy to package, and sufficient for a local academic demo.
 
 ---
 
@@ -330,98 +338,101 @@ flowchart TD
 
 ### `pkgs/surveys/clis/run.py`
 
-这是主入口 `main entry`。如果只读一个文件，优先读它。它负责：
+这是总调度入口 `main orchestrator`。  
+它负责：
 
-- 解析参数 `parse_args`
+- 解析 CLI 参数 `parse_args`
+- 确保目录存在 `ensure_layout`
 - 初始化状态 `build_status`
-- 串起四个阶段
+- 串起四个阶段：`fetch -> cards -> analysis -> weekly`
 - 写入 `pipeline_status.json` 和 `pipeline_history.json`
-- 在失败时把对应阶段标记为 `failed`
 
-不看这个文件，你就很难建立全局控制流。
+如果不看这个文件，你很难建立全局控制流。
 
 ### `pkgs/surveys/fetchers/arxivs.py`
 
-这是抓取层 `fetch layer`。它负责：
+这是抓取层 `fetch layer`。  
+它负责：
 
 - 调 arXiv API
-- 将 SDK 返回对象转换成字典
-- 根据 `arxiv_id` 去重
+- 把 SDK 返回对象转成普通字典
+- 基于 `arxiv_id` 去重
 - 写入 `dats/raws/papers_raw.json`
-- 向 `run.py` 回报抓取过程事件
 
 ### `pkgs/surveys/cards/generators.py`
 
-这是知识抽取层 `card extraction layer`，也是课程要求中最核心的模块之一。它负责：
+这是最核心的结构化抽取层 `card extraction layer`。  
+它负责：
 
-- 读取原始论文列表
+- 读取原始论文
 - 跳过已有卡片
 - 调用 `LLMClient`
 - 校验字段
-- 缺失字段填 `unknown`
-- 写入 `dats/cards/paper_cards.jsonl`
+- 补 `unknown`
+- 写入 `paper_cards.jsonl`
 
-这一步决定了系统是不是“结构化分析系统”，而不是“摘要拼接器”。
+这一层决定了系统是不是“结构化分析系统”。
 
 ### `pkgs/surveys/clients/llms.py`
 
-这是模型适配层 `LLM adapter layer`。它做了几件很重要的事：
+这是模型适配层 `LLM adapter layer`。  
+它负责：
 
-- 从环境变量读取 `OPENAI_API_KEY`
+- 读取 `OPENAI_API_KEY`
 - 支持 `OPENAI_BASE_URL`
-- 统一封装 `chat_json` 和 `chat_text`
-- 支持 `temperature`
-- 没有 API key 或调用失败时可以进入 `mock mode`
-- 记录本次是否用了 mock fallback
+- 封装 `chat_json` 与 `chat_text`
+- 处理超时、重试和 fallback
+- 支持 `mock mode`
 
-它把上层模块和具体模型 API 解耦了。
+如果不看它，你就不知道为什么有时走真模型，有时走 mock。
 
 ### `pkgs/surveys/analyses/clusters.py`
 
-这是分析层 `analysis layer`。它负责从卡片生成三个核心产物：
+这是分析聚合层 `analysis aggregation layer`。  
+它会把多张论文卡片提升为领域级输出：
 
 1. `taxonomy.md`
 2. `comparison_table.csv`
 3. `trend_analysis.md`
 
-也就是说，它把“单篇论文信息”转成“领域全景视图”。
-
 ### `pkgs/surveys/analyses/weeklies.py`
 
-这是综述汇总层 `weekly synthesis layer`。它并不直接读 arXiv 原始摘要来写综述，而是基于：
+这是最终周报生成层 `weekly synthesis layer`。  
+注意它不是直接对着摘要写周报，而是读取：
 
 - structured cards
 - taxonomy
 - comparison table
 - trend analysis
 
-来生成最终的 `weekly digest`。
+然后再生成 `weekly digest`。
 
 ### `pkgs/surveys/webs/servers.py`
 
-这是本地展示层 `web serving layer`。它负责：
+这是 Dashboard 的本地服务层 `dashboard serving layer`。  
+它负责把 `dats/*`、`outs/*` 变成前端可消费的 JSON API。
 
-- 提供 `/api/summary`
-- 提供 `/api/cards`
-- 提供 `/api/pipeline/status`
-- 提供 `/api/pipeline/history`
-- 提供静态文件 `/assets/*`、`/dashboards/*`、`/viewers/*`
+### `pkgs/surveys/clis/viewer.py`
 
-没有这个文件，项目就是一组离线脚本；有了它，项目就能演示“系统正在怎样工作”。
+这是 Standalone Viewer 的后端入口。  
+它和普通 dashboard 不一样的地方在于：
+
+- 会自动创建 `snps/imports`
+- 支持目录导入、zip 导入、散文件导入
+- 能把多个批次结果堆叠显示
+- 适合查看 GitHub Actions 下载回来的历史周次结果
 
 ### `pkgs/surveys/metas/paths.py`
 
-这是路径中心 `path registry`。它统一定义 `cfgs`、`dats`、`outs`、`uis` 等目录常量，并处理打包后的运行时路径 `runtime path`。这个设计可以避免每个模块都自己拼路径，降低目录重构带来的破坏面。
+这是路径注册中心 `path registry`。  
+它统一定义了 `cfgs`、`dats`、`outs`、`uis`、`snps`、`arts` 等路径，并处理 exe 运行时路径。
+
+这也是为什么 exe 模式下会把导入目录创建在 `arts/dists/snps/imports/` 附近。
 
 ### `pkgs/surveys/metas/workflows.py`
 
-这是阶段元数据中心 `workflow metadata registry`。它集中维护：
-
-- 阶段顺序 `STAGE_SEQUENCE`
-- 中英双语标签 `label_zh`, `label_en`
-- 标准阶段状态结构 `build_stage_entry`
-
-所以 `run.py` 和 `servers.py` 可以共用同一套阶段定义，不会一个地方叫“结构化抽取”，另一个地方叫“生成卡片”。
+这是阶段元数据中心 `workflow metadata registry`。  
+它统一定义 stage id、双语标签、默认状态结构，所以前后端都能共享同一套阶段语义。
 
 ---
 
@@ -429,30 +440,17 @@ flowchart TD
 
 ### `pkgs/surveys/clis/run.py`
 
-关键函数 Key Functions:
+关键函数：
 
-- `parse_args()`
-  - 解析命令行参数
 - `ensure_layout()`
-  - 确保 `dats`、`outs` 等目录存在
 - `build_status(args)`
-  - 生成初始状态对象
 - `append_event(status, stage_id, message, payload)`
-  - 写最近事件流
 - `mark_stage(...)`
-  - 更新某个阶段状态
-- `set_stage_stats(...)`
-  - 为某阶段记录统计数据
+- `set_stage_stats(status, stage_id, stats)`
 - `append_history_entry(status)`
-  - 将本次运行摘要写入历史
-- `fetch_progress_handler(status)`
-  - 生成抓取阶段的回调
-- `cards_progress_handler(status)`
-  - 生成卡片阶段的回调
 - `main()`
-  - 主调度函数
 
-主调用链 Main Call Chain:
+主调用链：
 
 ```text
 main()
@@ -463,43 +461,29 @@ main()
   -> append_history_entry()
 ```
 
-### `pkgs/surveys/fetchers/arxivs.py`
-
-关键函数:
-
-- `paper_to_dict()`
-  - 把 arXiv 返回对象转换成 JSON 友好字典
-- `load_existing_papers()`
-  - 读取已有 raw papers
-- `fetch_papers()`
-  - 主抓取函数
-
 ### `pkgs/surveys/cards/generators.py`
 
-关键函数:
+关键函数通常包括：
 
-- `load_json()`
 - `read_jsonl()`
 - `normalize_card()`
 - `generate_one_card()`
-- `generate_batch_cards()`
 - `generate_cards()`
 
-它的内部调用关系大致是：
+典型调用链：
 
 ```text
 generate_cards()
-  -> load_json(raw_path)
-  -> read_jsonl(cards_path)
-  -> LLMClient(...)
-  -> generate_batch_cards() / generate_one_card()
-  -> normalize_card()
-  -> write_jsonl_atomic(cards_path)
+  -> read raw papers
+  -> read existing cards
+  -> call LLM client
+  -> normalize fields
+  -> append JSONL records
 ```
 
 ### `pkgs/surveys/analyses/clusters.py`
 
-关键函数:
+关键函数：
 
 - `build_comparison_rows()`
 - `infer_complexity()`
@@ -510,23 +494,33 @@ generate_cards()
 
 ### `pkgs/surveys/analyses/weeklies.py`
 
-关键函数:
+关键函数：
 
 - `compact_cards()`
 - `deterministic_digest()`
 - `generate_weekly_digest()`
 
-### `pkgs/surveys/webs/servers.py`
+### `pkgs/surveys/clis/viewer.py`
 
-关键函数:
+关键函数：
 
-- `read_pipeline_status()`
-- `build_fallback_pipeline_status()`
-- `api_summary()`
-- `filter_cards()`
-- `SurveyHandler.do_GET()`
-- `SurveyHandler.serve_json()`
-- `SurveyHandler.serve_static()`
+- `detect_kind()`
+- `batch_from_directory()`
+- `batch_from_zip()`
+- `batch_from_loose_files()`
+- `load_import_batches()`
+- `imports_meta()`
+
+这里的调用链是：
+
+```text
+viewer server
+  -> scan imports folder
+  -> build batch payloads
+  -> expose /api/imports/meta
+  -> expose /api/imports/load
+  -> frontend viewer.js renders stacked results
+```
 
 ---
 
@@ -534,28 +528,27 @@ generate_cards()
 
 ### 数据流 Data Flow
 
-数据是怎样一步步变形的：
-
 ```text
 arXiv SDK result
   -> paper dict
-  -> dats/raws/papers_raw.json
-  -> structured paper card
-  -> dats/cards/paper_cards.jsonl
-  -> taxonomy / comparison / trend artifacts
-  -> weekly digest markdown
+  -> papers_raw.json
+  -> paper_cards.jsonl
+  -> taxonomy / comparison / trend
+  -> weekly digest
+  -> dashboard / viewer visualization
 ```
 
-更细一点可以理解成：
+拆开看：
 
 1. `arxivs.py` 把远端论文元数据拉到本地
-2. `generators.py` 把论文摘要压缩成标准字段
+2. `generators.py` 把摘要压缩成标准字段
 3. `clusters.py` 把多张卡片聚合成领域分析
-4. `weeklies.py` 把领域分析再压缩成教师可读的周报
+4. `weeklies.py` 把领域分析转成短综述
+5. `servers.py` 和 `viewer.py` 把文件重新组织成可视化页面
 
 ### 控制流 Control Flow
 
-控制流由 `pkgs/surveys/clis/run.py` 统一推进：
+控制流由 `run.py` 统一推进：
 
 1. 初始化目录和状态
 2. 执行 `fetch`
@@ -565,20 +558,14 @@ arXiv SDK result
 6. 写入 `completed` 或 `failed`
 7. 追加历史记录
 
-关键判断点 Key Decision Points:
+关键判断点：
 
 - `--skip_fetch`
-  - 是否跳过抓取，直接复用已有 `papers_raw.json`
 - `--card_limit`
-  - 是否只处理少量新卡片，方便开发测试
 - `--batch_size`
-  - 每次 LLM 批量处理多少篇
 - `--no_llm_taxonomy`
-  - taxonomy 是否使用 LLM 辅助
 - `--no_llm_weekly`
-  - weekly digest 是否使用 LLM 辅助
-- `client.mock`
-  - 当前是否处于 mock 模式
+- `mock mode`
 
 ---
 
@@ -587,109 +574,105 @@ arXiv SDK result
 ### Python Libraries
 
 - `arxiv`
-  - 连接 arXiv 数据源
+  - 用于连接 arXiv 数据源
 - `openai`
-  - 调用 OpenAI-compatible API
+  - 用于调用 OpenAI-compatible API
 - `pandas`
-  - 生成和处理 comparison table
+  - 用于整理比较表和分析数据
 - `python-dotenv`
-  - 加载 `cfgs/envs/.env`
+  - 用于加载 `.env`
 
-### 外部服务 External Services
+### External Services
 
 - arXiv API
   - 原始论文来源
 - OpenAI-compatible LLM API
   - 结构化抽取、taxonomy 总结、weekly digest 生成
 
-### 本地接口 Local Interfaces
+### Local Interfaces
 
 - `http.server`
-  - 提供 Dashboard / Viewer 所需 API 和静态资源
+  - 提供 dashboard / viewer 的本地 HTTP 服务
 - PyInstaller
-  - 用于打包 EXE 查看器
+  - 用于打包 exe 查看器
 - GitHub Actions
-  - 每周远程自动运行流水线
+  - 用于每周自动执行远程 pipeline
 
 ---
 
 ## 10. 启动方式与运行条件 Startup and Runtime Requirements
 
-### 运行前条件 Runtime Requirements
+### 运行前需要准备 Runtime Requirements
 
-1. 安装 Python 3.11+
-2. 安装依赖 `cfgs/pkgs/requirements.txt`
-3. 在 `cfgs/envs/.env` 配置 API 信息
-4. 如需正式作业结果，使用真实 LLM API，而不是 mock 模式
+1. Python 3.11+
+2. `cfgs/pkgs/requirements.txt`
+3. `cfgs/envs/.env`
+4. 正式生成时需要真实 LLM API，而不是 mock
 
-### 安装依赖 Install Dependencies
+### 安装依赖 Install
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r cfgs/pkgs/requirements.txt
+python -m pip install -r cfgs/pkgs/requirements.txt
 ```
 
-### 启动主流程 Run The Pipeline
+### 运行主流程 Run Pipeline
 
 ```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.run
+python -m pkgs.surveys.clis.run
 ```
 
 ### 开发期轻量测试 Development Smoke Test
 
 ```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.run --max_results 8 --card_limit 2 --batch_size 1 --no_llm_taxonomy --no_llm_weekly
+python -m pkgs.surveys.clis.run --max_results 8 --card_limit 2 --batch_size 1 --no_llm_taxonomy --no_llm_weekly
 ```
 
-### 启动本地 Dashboard Start Local Dashboard
+### 启动本地 Dashboard
 
 ```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.serve --host 127.0.0.1 --port 8765
+python -m pkgs.surveys.clis.serve --host 127.0.0.1 --port 8765
 ```
 
-### 自动打开版 Dashboard Open-In-Browser Dashboard
+### 启动 Standalone Viewer
 
 ```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.dashboard
+python -m pkgs.surveys.clis.viewer
 ```
 
-### Standalone Viewer
-
-```powershell
-python -m http.server 8877
-```
-
-然后打开 Then Open:
+或直接运行：
 
 ```text
-http://127.0.0.1:8877/uis/viewers/viewer.html
+arts/dists/survey_viewer_standalone_v5.exe
 ```
 
 ---
 
 ## 11. 最小可理解路径 Minimum Learning Path
 
-如果你想用最短时间真正看懂源码，推荐按这个顺序读：
+如果你想用最短时间看懂项目，推荐阅读顺序：
 
 1. `pkgs/surveys/clis/run.py`
-   - 先建立主流程和状态观
+   - 建立总流程概念
 2. `pkgs/surveys/metas/workflows.py`
-   - 看四个阶段的统一定义
+   - 看阶段定义
 3. `pkgs/surveys/metas/paths.py`
-   - 看路径是怎样被统一管理的
+   - 看目录与运行时路径
 4. `pkgs/surveys/fetchers/arxivs.py`
-   - 看原始论文从哪里来
+   - 看抓取逻辑
 5. `pkgs/surveys/cards/generators.py`
-   - 看结构化抽取的核心逻辑
+   - 看结构化抽取
 6. `pkgs/surveys/clients/llms.py`
-   - 看模型调用和 mock fallback
+   - 看模型调用和 fallback
 7. `pkgs/surveys/analyses/clusters.py`
-   - 看 taxonomy 和 comparison 怎样生成
+   - 看 taxonomy / comparison / trend
 8. `pkgs/surveys/analyses/weeklies.py`
-   - 看 weekly digest 怎样从中间产物生成
+   - 看 weekly digest
 9. `pkgs/surveys/webs/servers.py`
-   - 看 Dashboard / Viewer 怎样读这些文件并展示
-10. `uis/dashboards/app.js`
-   - 看前端怎样渲染 pipeline status 和 cards
+   - 看 dashboard 数据接口
+10. `pkgs/surveys/clis/viewer.py`
+   - 看独立查看器的导入机制
+11. `uis/viewers/viewer.js`
+   - 看前端怎样渲染多批结果
 
 ---
 
@@ -698,38 +681,39 @@ http://127.0.0.1:8877/uis/viewers/viewer.html
 | 中文 | English Original |
 |---|---|
 | 文献自动综述生成系统 | Literature Survey System |
-| 流水线 | Pipeline |
 | 工作流 | Workflow |
-| 原始论文元数据 | Raw paper metadata |
+| 流水线 | Pipeline |
+| 原始元数据 | Raw metadata |
 | 结构化论文卡片 | Structured paper card |
 | 分类体系 | Taxonomy |
 | 方法对比表 | Comparison table |
 | 趋势分析 | Trend analysis |
 | 每周综述 | Weekly Survey Digest |
+| 可审计性 | Auditability |
 | 增量更新 | Incremental update |
 | 证据来源 | Evidence source |
-| 审计字段 | Audit fields |
 | 模拟模式 | Mock mode |
-| 运行状态 | Pipeline status |
+| 状态快照 | Pipeline status |
 | 运行历史 | Pipeline history |
-| 本地查看器 | Local viewer |
 | 本地 Dashboard | Local dashboard |
+| 独立查看器 | Standalone viewer |
+| 投递箱目录 | Import drop folder |
 
 ---
 
-## 精简复习版 Quick Review
+## 初学者复习精简版 Quick Review for Beginners
 
-如果只记一句话：
+一句话理解：
 
-> 这个项目先抓 arXiv，再把摘要变成结构化 JSON 卡片，再基于卡片生成 taxonomy、comparison、trend 和 weekly digest，最后通过本地 Dashboard / Viewer 展示整个工作流和历史结果。
+> 这个项目先从 arXiv 抓论文，再把摘要变成结构化 JSON 卡片，再基于卡片生成 taxonomy、comparison、trend 和 weekly digest，最后通过 dashboard 和 viewer 把整个过程展示出来。
 
-如果只记四个关键文件：
+如果你只记四个核心文件：
 
 1. `pkgs/surveys/clis/run.py`
 2. `pkgs/surveys/cards/generators.py`
 3. `pkgs/surveys/analyses/clusters.py`
 4. `pkgs/surveys/analyses/weeklies.py`
 
-如果只记一个原则：
+如果你只记一个原则：
 
 > 它不是“直接让 AI 写综述”，而是“让 AI 参与结构化知识流水线中的分析环节”。

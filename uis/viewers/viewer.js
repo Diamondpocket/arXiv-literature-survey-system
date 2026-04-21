@@ -655,34 +655,62 @@ function renderCards() {
     .slice(0, 160)
     .map((card) => {
       const sourceUrl = card.source_url || `https://arxiv.org/abs/${card.arxiv_id || ""}`;
+      const pdfUrl = card.pdf_url || (card.arxiv_id ? `https://arxiv.org/pdf/${card.arxiv_id}.pdf` : "");
+      const preview = shortText(`${card.problem || "unknown"} ${card.key_idea || "unknown"}`, 220);
+      const category = card.best_fit_category || "unknown";
+      const innovation = card.innovation_type || "unknown";
+      const confidence = card.confidence_level || "unknown";
       return `
         <article class="paper-card">
           <div class="paper-card-head">
-            <div>
-              <h3>${escapeHtml(card.title || "unknown")}</h3>
+            <div class="paper-card-heading">
               <div class="paper-meta-line">
-                <span>${escapeHtml(card.__batch_label || "imported")}</span>
-                <span>${escapeHtml(card.best_fit_category || "unknown")}</span>
-                <span>${escapeHtml(card.innovation_type || "unknown")}</span>
-                <span>${escapeHtml(card.confidence_level || "unknown")}</span>
+                <span class="paper-chip subtle">${escapeHtml(card.__batch_label || "imported")}</span>
+                <span class="paper-chip category">${escapeHtml(category)}</span>
+                <span class="paper-chip">${escapeHtml(innovation)}</span>
+                <span class="paper-chip confidence-${escapeHtml(confidence)}">${escapeHtml(confidence)}</span>
               </div>
+              <h3>${escapeHtml(card.title || "unknown")}</h3>
+              <p class="paper-preview">${escapeHtml(preview)}</p>
             </div>
             <div class="paper-links">
               <a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">arXiv</a>
-              ${card.pdf_url ? `<a href="${escapeHtml(card.pdf_url)}" target="_blank" rel="noreferrer">PDF</a>` : ""}
+              ${pdfUrl ? `<a href="${escapeHtml(pdfUrl)}" target="_blank" rel="noreferrer">PDF</a>` : ""}
             </div>
           </div>
 
-          <div class="paper-grid">
-            <div><strong>Problem</strong><p>${escapeHtml(shortText(card.problem, 420))}</p></div>
-            <div><strong>Key idea</strong><p>${escapeHtml(shortText(card.key_idea, 420))}</p></div>
-            <div><strong>Method</strong><p>${escapeHtml(shortText(card.method, 420))}</p></div>
-            <div><strong>Dataset / scenario</strong><p>${escapeHtml(shortText(card.dataset_or_scenario, 420))}</p></div>
-            <div><strong>Metrics</strong><p>${escapeHtml(shortText(card.metrics, 260))}</p></div>
-            <div><strong>Results</strong><p>${escapeHtml(shortText(card.results_summary, 420))}</p></div>
-            <div><strong>Limitations</strong><p>${escapeHtml(shortText(card.limitations, 320))}</p></div>
-            <div><strong>Audit</strong><p>${escapeHtml(card.model || "unknown")} | ${escapeHtml(formatDateTime(card.generated_at))}</p></div>
+          <div class="paper-signal-grid">
+            <div class="paper-signal">
+              <span>Method</span>
+              <strong>${escapeHtml(shortText(card.method, 92))}</strong>
+            </div>
+            <div class="paper-signal">
+              <span>Dataset / scenario</span>
+              <strong>${escapeHtml(shortText(card.dataset_or_scenario, 92))}</strong>
+            </div>
+            <div class="paper-signal">
+              <span>Metrics</span>
+              <strong>${escapeHtml(shortText(card.metrics, 92))}</strong>
+            </div>
+            <div class="paper-signal">
+              <span>Results</span>
+              <strong>${escapeHtml(shortText(card.results_summary, 92))}</strong>
+            </div>
           </div>
+
+          <details class="paper-detail-panel">
+            <summary>展开详情</summary>
+            <div class="paper-grid">
+              <div><strong>Problem</strong><p>${escapeHtml(shortText(card.problem, 420))}</p></div>
+              <div><strong>Key idea</strong><p>${escapeHtml(shortText(card.key_idea, 420))}</p></div>
+              <div><strong>Method</strong><p>${escapeHtml(shortText(card.method, 420))}</p></div>
+              <div><strong>Dataset / scenario</strong><p>${escapeHtml(shortText(card.dataset_or_scenario, 420))}</p></div>
+              <div><strong>Metrics</strong><p>${escapeHtml(shortText(card.metrics, 260))}</p></div>
+              <div><strong>Results</strong><p>${escapeHtml(shortText(card.results_summary, 420))}</p></div>
+              <div><strong>Limitations</strong><p>${escapeHtml(shortText(card.limitations, 320))}</p></div>
+              <div><strong>Audit</strong><p>${escapeHtml(card.model || "unknown")} | ${escapeHtml(formatDateTime(card.generated_at))}</p></div>
+            </div>
+          </details>
         </article>
       `;
     })

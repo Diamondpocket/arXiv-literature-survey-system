@@ -1,96 +1,112 @@
 # arXiv Literature Survey System
 # arXiv 文献自动综述生成系统
 
-这是一个面向 `arXiv` 的自动化文献追踪与周报生成系统。  
-This project is an automated literature tracking and weekly survey generation system for `arXiv`.
+这是一个围绕 `arXiv` 构建的自动化文献追踪与综述生成项目。  
+This project is an automated literature tracking and survey generation system built around `arXiv`.
 
-项目默认研究方向是 `Retrieval-Augmented Generation, RAG`，但主题 `topic` 和检索词 `query` 都可以配置。  
+项目默认研究主题是 `Retrieval-Augmented Generation, RAG`，但 `topic` 和 `query` 都可以配置。  
 The default research topic is `Retrieval-Augmented Generation, RAG`, while both `topic` and `query` are configurable.
+
+这个项目的重点不是“直接让 AI 代写综述”，而是把综述拆成一条可审计、可追踪、可增量更新的结构化知识流水线。  
+The goal is not to let AI directly ghostwrite a survey, but to build an auditable, traceable, incrementally updated structured knowledge pipeline.
 
 ---
 
 ## 项目目标 Project Goal
 
-这个项目的目标，不是直接让大模型代写一篇综述，而是构建一条**结构化知识流水线** `structured knowledge pipeline`：
+系统完成以下事情：
 
-1. 抓取论文 `fetch papers`
-2. 生成结构化卡片 `generate structured paper cards`
-3. 做分类与对比分析 `taxonomy and comparison analysis`
-4. 生成每周综述 `weekly survey digest`
-5. 提供可视化查看界面 `dashboard and viewer`
-
-换句话说，这个系统强调的是：
-
-- 原始数据保留 `raw data preservation`
-- 中间结构化产物保留 `structured intermediate artifacts`
-- 过程可审计 `auditability`
-- 结果可重复生成 `reproducibility`
+1. 从 `arXiv` 自动抓取近 1 到 2 年的相关论文。
+2. 保存原始元数据 `raw metadata`。
+3. 为每篇论文生成结构化 JSON 卡片 `structured paper card`。
+4. 基于卡片生成分类体系 `taxonomy`、方法对比表 `comparison table`、趋势分析 `trend analysis`。
+5. 每周自动生成综述摘要 `Weekly Survey Digest`。
+6. 保留历史结果，并支持本地可视化查看。
 
 ---
 
-## 核心流程 Core Workflow
-
-主流程 `main pipeline` 如下：
+## 核心工作流 Core Workflow
 
 ```text
-fetch arXiv papers
+fetch papers from arXiv
   -> dats/raws/papers_raw.json
-  -> generate paper cards
+  -> generate structured cards
   -> dats/cards/paper_cards.jsonl
-  -> cluster and analyze
+  -> cluster and compare
   -> outs/taxons/taxonomy.md
   -> outs/tables/comparison_table.csv
   -> outs/trends/trend_analysis.md
   -> generate weekly digest
   -> outs/digests/weekly_digest_latest.md
+  -> archive dated weekly digest
+  -> outs/digests/weeklies/YYYY-MM-DD.md
 ```
 
-同时系统还会生成运行状态：
+系统同时会记录工作流状态：
 
 - `outs/stats/pipeline_status.json`
 - `outs/stats/pipeline_history.json`
 
-用于本地 `dashboard` 实时查看当前工作流和历史运行。
+这两份状态文件会被本地 `dashboard` 和 `viewer` 读取，用来展示当前执行进度和历史运行记录。  
+These two status files are used by the local `dashboard` and `viewer` to show live workflow progress and historical runs.
 
 ---
 
-## 项目结构 Project Structure
+## 目录结构 Project Structure
 
 ```text
 literature-survey-system/
-  cfgs/   配置文件 Configuration files
-  dats/   原始数据与结构化卡片 Data files and structured cards
-  docs/   文档与源码分析 Documents and analysis notes
-  outs/   分析结果与周报 Outputs and generated reports
-  pkgs/   Python 包源码 Python package source code
-  pmts/   提示词模板 Prompt templates
-  snps/   周次快照与结果归档 Weekly snapshots and archives
-  tls/    打包与构建工具 Build and packaging tools
-  uis/    本地界面 Dashboard and standalone viewer
+  .github/        GitHub Actions workflows
+  arts/           build outputs, exe files, logs, releases
+  cfgs/           environment and dependency configuration
+  dats/           raw paper data and structured cards
+  docs/           analysis notes and usage documents
+  outs/           generated reports and monitoring files
+  pkgs/           Python package source code
+  pmts/           prompt templates
+  snps/           weekly snapshots and import drop folders
+  tls/            packaging scripts and PyInstaller spec files
+  tsts/           tests
+  uis/            dashboard and standalone viewer frontend
+  README.md
 ```
 
-更细一点的重要目录如下：
+重点目录说明：
 
 - `cfgs/envs/`
-  - 环境变量配置 `environment configuration`
+  - 环境变量配置，例如 `.env.example`
 - `cfgs/pkgs/requirements.txt`
-  - Python 依赖 `Python dependencies`
+  - Python 依赖列表
 - `dats/raws/`
-  - 原始论文元数据 `raw paper metadata`
+  - `papers_raw.json`，保存 arXiv 原始元数据
 - `dats/cards/`
-  - 结构化论文卡片 `structured paper cards`
+  - `paper_cards.jsonl`，保存结构化论文卡片
 - `outs/taxons/`
-  - 分类体系 `taxonomy`
+  - `taxonomy.md`
 - `outs/tables/`
-  - 方法对比表 `comparison table`
+  - `comparison_table.csv`
 - `outs/trends/`
-  - 趋势分析 `trend analysis`
+  - `trend_analysis.md`
 - `outs/digests/`
-  - 周报输出 `weekly digests`
+  - `weekly_digest_latest.md` 和历史周报
 - `outs/stats/`
-  - 流水线状态 `pipeline monitoring data`
-- `snps/weeklies/`
-  - 每周运行结果快照 `dated weekly snapshots`
+  - 流水线状态文件
+- `pkgs/surveys/clis/`
+  - 命令行入口 `CLI entry points`
+- `pkgs/surveys/fetchers/`
+  - arXiv 抓取逻辑
+- `pkgs/surveys/cards/`
+  - 结构化卡片生成逻辑
+- `pkgs/surveys/analyses/`
+  - taxonomy、comparison、trend、weekly digest 生成逻辑
+- `pkgs/surveys/clients/`
+  - LLM client 封装
+- `pkgs/surveys/webs/`
+  - 本地 Web 服务
+- `uis/dashboards/`
+  - 本地实时监控界面
+- `uis/viewers/`
+  - 独立查看器前端
 
 ---
 
@@ -99,25 +115,31 @@ literature-survey-system/
 ### 1. 运行完整流水线 Run Full Pipeline
 
 ```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.run
+python -m pkgs.surveys.clis.run
 ```
 
-### 2. 启动本地监控面板 Start Local Dashboard
+### 2. 启动本地 Dashboard Start Local Dashboard
 
 ```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.serve --host 127.0.0.1 --port 8765
+python -m pkgs.surveys.clis.serve --host 127.0.0.1 --port 8765
 ```
 
-### 3. 启动自动打开浏览器的面板 Start Dashboard With Auto Open
+然后打开：
 
-```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.dashboard
+```text
+http://127.0.0.1:8765
 ```
 
-### 4. 启动独立查看器 Start Standalone Viewer
+### 3. 启动 Standalone Viewer Start Standalone Viewer
 
 ```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.viewer
+python -m pkgs.surveys.clis.viewer
+```
+
+或者直接运行已打包的 exe：
+
+```text
+arts/dists/survey_viewer_standalone_v5.exe
 ```
 
 ---
@@ -127,7 +149,7 @@ literature-survey-system/
 ### 第一步：安装依赖 Install Dependencies
 
 ```powershell
-.\.venv\Scripts\python.exe -m pip install -r cfgs/pkgs/requirements.txt
+python -m pip install -r cfgs/pkgs/requirements.txt
 ```
 
 ### 第二步：配置环境变量 Configure Environment Variables
@@ -144,37 +166,63 @@ cfgs/envs/.env.example
 cfgs/envs/.env
 ```
 
-常用配置项包括：
+常用配置项：
 
 - `OPENAI_API_KEY`
 - `OPENAI_BASE_URL`
 - `OPENAI_MODEL`
 - `LLM_TEMPERATURE`
+- `LLM_REQUEST_TIMEOUT_SECONDS`
+- `LLM_RETRY_ATTEMPTS`
 
-### 第三步：先跑轻量测试 Run A Lightweight Local Test
+### 第三步：先跑小规模测试 Run a Small Development Test
 
-开发阶段不建议每次都抓几十上百篇论文，先小规模测试更稳：
-
-```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.run --max_results 8 --card_limit 2 --batch_size 1 --no_llm_taxonomy --no_llm_weekly
-```
-
-### 第四步：启动本地查看界面 Open Local UI
+开发阶段不建议一上来就抓几十上百篇，先跑轻量测试更稳：
 
 ```powershell
-.\.venv\Scripts\python.exe -m pkgs.surveys.clis.serve --host 127.0.0.1 --port 8765
+python -m pkgs.surveys.clis.run --max_results 8 --card_limit 2 --batch_size 1 --no_llm_taxonomy --no_llm_weekly
 ```
 
-然后打开：
+### 第四步：运行完整版本 Run the Full Version
 
-```text
-http://127.0.0.1:8765
+```powershell
+python -m pkgs.surveys.clis.run --max_results 80 --years 2
 ```
 
-### 第五步：使用独立查看器导入结果 Use Standalone Viewer
+---
 
-如果你是从 GitHub Actions 下载结果到本地，再统一查看，建议使用独立查看器。  
-它支持多次追加导入，不会覆盖上一批 weekly 结果。
+## 论文卡片字段 Paper Card Fields
+
+每篇论文会生成一张结构化 JSON 卡片，至少包含：
+
+- `title`
+- `problem`
+- `key_idea`
+- `method`
+- `dataset_or_scenario`
+- `metrics`
+- `results_summary`
+- `innovation_type`
+- `limitations`
+- `best_fit_category`
+- `confidence_level`
+
+同时保留审计字段：
+
+- `arxiv_id`
+- `source_url`
+- `published`
+- `summary`
+- `evidence_source`
+- `model`
+- `generated_at`
+
+约束原则：
+
+1. 结构化抽取优先基于标题和摘要 `title + abstract`。
+2. 不允许编造数据集、指标、结果。
+3. 摘要没写到的信息，写 `unknown` 或 `not specified`。
+4. 缺失字段时会自动补全并把 `confidence_level` 降为 `low`。
 
 ---
 
@@ -182,48 +230,46 @@ http://127.0.0.1:8765
 
 ### 原始数据 Raw Data
 
-- `dats/raws/papers_raw.json`  
-  arXiv 原始论文元数据 `raw arXiv metadata`
+- `dats/raws/papers_raw.json`
+  - arXiv 原始论文元数据 `raw arXiv metadata`
 
 ### 结构化卡片 Structured Cards
 
-- `dats/cards/paper_cards.jsonl`  
-  每篇论文对应一张 JSON 卡片 `one JSON card per paper`
+- `dats/cards/paper_cards.jsonl`
+  - 每篇论文一条 JSON 记录 `one JSON record per paper`
 
-### 分析结果 Analysis Artifacts
+### 分析产物 Analysis Artifacts
 
-- `outs/taxons/taxonomy.md`  
-  分类体系 `taxonomy`
-
-- `outs/tables/comparison_table.csv`  
-  方法对比表 `comparison table`
-
-- `outs/trends/trend_analysis.md`  
-  趋势分析与研究空白 `trend analysis and research gaps`
+- `outs/taxons/taxonomy.md`
+  - 分类体系 `taxonomy`
+- `outs/tables/comparison_table.csv`
+  - 方法对比表 `comparison table`
+- `outs/trends/trend_analysis.md`
+  - 趋势分析与研究空白 `trend analysis and research gaps`
 
 ### 周报 Weekly Digest
 
-- `outs/digests/weekly_digest_latest.md`  
-  最新周报 `latest digest`
+- `outs/digests/weekly_digest_latest.md`
+  - 最新周报 `latest digest`
+- `outs/digests/weeklies/YYYY-MM-DD.md`
+  - 历史周报归档 `historical weekly digests`
 
-- `outs/digests/weeklies/YYYY-MM-DD.md`  
-  历史周报归档 `historical weekly archives`
+### 工作流监控 Workflow Monitoring
 
-### 工作流状态 Workflow Monitoring
-
-- `outs/stats/pipeline_status.json`  
-  当前运行状态 `current run status`
-
-- `outs/stats/pipeline_history.json`  
-  历史运行记录 `historical run records`
+- `outs/stats/pipeline_status.json`
+  - 当前运行状态 `current pipeline status`
+- `outs/stats/pipeline_history.json`
+  - 历史运行记录 `historical runs`
 
 ---
 
-## 为什么这不是“直接让 AI 写综述” Why This Is Not Direct AI Ghostwriting
+## 为什么这不是“直接让 AI 写综述”
+## Why This Is Not Direct AI Ghostwriting
 
-这个项目专门保留了完整的中间过程，而不是只保留最终周报。
+这个项目专门保留了完整的中间过程，而不是只保留最终周报。  
+The project deliberately preserves the full intermediate process instead of keeping only the final digest.
 
-系统输出包括：
+系统产物包括：
 
 1. 原始论文元数据 `raw metadata`
 2. 结构化论文卡片 `structured paper cards`
@@ -232,40 +278,50 @@ http://127.0.0.1:8765
 5. 趋势分析 `trend analysis`
 6. 每周综述 `weekly digest`
 
-因此，最终报告是**基于结构化中间产物生成的**，而不是从空白直接生成整篇综述。
+因此，最终报告是基于中间结构化产物生成的，而不是从空白直接生成整篇综述。  
+The final report is generated from intermediate structured artifacts, not hallucinated from scratch.
 
 ---
 
-## Mock 模式说明 Mock Mode
+## Mock Mode 是什么
+## What Mock Mode Means
 
-如果没有可用的真实 API Key，系统允许进入 `mock mode`，从而保证整条流水线仍然可以跑通，用于：
+如果没有可用的真实 API Key，系统允许退化到 `mock mode`，以保证流程和界面还能跑通。  
+If no real API key is available, the system can fall back to `mock mode` so the pipeline and UI still run.
 
-- 本地流程测试 `local workflow testing`
-- 前端界面测试 `UI testing`
+`mock mode` 的用途：
+
+- 本地流程调试 `local workflow debugging`
+- 前端界面联调 `UI testing`
 - GitHub Actions 调试 `workflow debugging`
 
-但必须注意：
+但要注意：
 
-> `mock mode` 只能用于演示和测试，不能作为最终课程作业结果。
-
-正式提交时，应使用真实 LLM API 重新生成结果。
-
----
-
-## API 与重试策略 API and Retry Strategy
-
-为了避免在工作流中因为超时或限流长时间卡住，项目对 LLM 调用做了保守处理：
-
-- 请求超时 `request timeout` 控制
-- 限流时快速失败 `fast failure on hard rate limits`
-- 降低重试次数 `reduced retry count`
-- 必要时快速 fallback 到 mock
-
-这样做的目标不是掩盖 API 问题，而是保证系统在开发阶段和自动化运行阶段更稳定，不会因为单次调用把整条流水线拖很久。
+> `mock mode` 只能用于演示和开发，不能作为最终课程作业结果。  
+> `mock mode` is for demo and development only, not for final coursework submission.
 
 ---
 
-## GitHub Actions 自动运行 GitHub Actions Automation
+## LLM 配置建议 LLM Configuration Notes
+
+默认学术型任务通常更适合低温度 `low temperature`，例如 `0`。  
+In principle, academic extraction tasks are usually better with a low temperature such as `0`.
+
+但是部分兼容 OpenAI 的提供商模型会限制 `temperature` 取值，例如只接受 `1`。  
+However, some OpenAI-compatible providers restrict the allowed `temperature`, for example accepting only `1`.
+
+因此项目把 `LLM_TEMPERATURE` 做成了可配置项：
+
+- 如果模型支持，优先用 `0`
+- 如果服务端限制，使用提供商要求的值，例如 `1`
+
+这不是“随机性更大更好”，而是“先保证接口可用，再结合 prompt 和审计机制控制稳定性”。  
+This is not about preferring higher randomness, but about staying compatible first and controlling variance through prompts and auditing.
+
+---
+
+## GitHub Actions 自动运行
+## GitHub Actions Automation
 
 仓库包含工作流文件：
 
@@ -277,30 +333,37 @@ http://127.0.0.1:8765
 
 - 每周自动运行 `scheduled weekly run`
 - 手动触发 `workflow_dispatch`
-- 自动提交更新后的 `dats` 和 `outs`
+- 自动生成 `dats`、`outs`、`snps`
+- 自动把结果提交回仓库
 
-如果要启用，需要在 GitHub 仓库中配置：
+通常需要在 GitHub 仓库中配置以下 Secrets：
 
 - `OPENAI_API_KEY`
 - `OPENAI_BASE_URL`
 
-可选变量：
+常见 Variables：
 
 - `OPENAI_MODEL`
 
+如果你需要在网页端手动测试：
+
+1. 打开 GitHub 仓库
+2. 进入 `Actions`
+3. 选择 `weekly.yml`
+4. 点击 `Run workflow`
+
 ---
 
-## 周次快照目录 Weekly Snapshot Archive
+## 周次快照与下载
+## Weekly Snapshots and Download
 
-为了方便保存和下载每次自动运行后的结果，项目在仓库根目录下使用：
+为了便于每次自动运行后留档，项目会把结果按时间归档到：
 
 ```text
 snps/weeklies/
 ```
 
-作为周次快照目录 `weekly snapshot archive`。
-
-每次 GitHub Actions 成功运行后，工作流会自动生成一份带时间戳的历史快照，例如：
+典型结构如下：
 
 ```text
 snps/weeklies/YYYY-MM-DD_HHMMSS/
@@ -308,53 +371,69 @@ snps/weeklies/YYYY-MM-DD_HHMMSS/
   outs/
 ```
 
-同时还会生成一个同名压缩包：
+同时可以生成同名 zip，方便直接下载和本地查看。  
+The workflow can also produce a matching zip so each weekly run can be downloaded and inspected locally.
+
+这套设计的好处是：
+
+- 每次运行都有独立快照
+- 便于按时间回看历史版本
+- 便于把多个周次结果导入同一个查看器
+
+---
+
+## Standalone Viewer 独立查看器
+
+项目内置一个本地结果查看器，用于把 GitHub Actions 下载回来的结果堆叠展示。  
+The project includes a local standalone viewer for stacking and browsing downloaded workflow results.
+
+入口方式：
+
+- Python 运行：
+  - `python -m pkgs.surveys.clis.viewer`
+- EXE 运行：
+  - `arts/dists/survey_viewer_standalone_v5.exe`
+
+查看器会自动创建投递目录：
 
 ```text
-snps/weeklies/weekly-results-YYYY-MM-DD_HHMMSS.zip
+snps/imports/
 ```
 
-这个设计的作用是：
+如果你运行的是 exe，则投递目录会出现在 exe 所在目录旁边，例如：
 
-- 保留每次运行时的完整结果 `full result preservation`
-- 方便在仓库中按时间查看历史版本 `time-based browsing`
-- 方便直接下载 zip 文件到本地 `direct zip download`
-- 方便后续使用独立查看器叠加导入多个周次结果 `stacked import into standalone viewer`
+```text
+arts/dists/snps/imports/
+```
 
----
+你只需要把以下任意一种东西丢进去：
 
-## 独立查看器 Standalone Viewer
+1. 一整个结果目录，内部包含 `dats/` 和 `outs/`
+2. 由 Actions 导出的 zip 文件
+3. 单独的 `papers_raw.json`、`paper_cards.jsonl`、`taxonomy.md` 等文件
 
-项目包含一个专门用于本地导入结果文件的独立查看器 `standalone viewer`。
+查看器会自动识别并加载：
 
-它适合这样的场景：
+- `papers_raw.json`
+- `paper_cards.jsonl`
+- `comparison_table.csv`
+- `taxonomy.md`
+- `trend_analysis.md`
+- `weekly_digest_latest.md`
+- `pipeline_status.json`
+- `pipeline_history.json`
 
-- GitHub Actions 在远端运行
-- 你把 `dats` / `outs` 下载到本地
-- 然后在本地统一导入查看
+更详细的使用方法见：
 
-它的特点：
-
-- 纯前端解析 `json / jsonl / csv / md`
-- 不依赖本地 Python 后端业务数据
-- 支持多批次结果追加导入
-- 适合把每周独立下载的结果持续堆叠查看
-
----
-
-## 文档入口 Documentation
-
-- `docs/readmes/usage.txt`  
-  本地使用说明 `practical usage notes`
-
-- `docs/analyses/project_analysis.md`  
-  源码级项目分析 `source-level project analysis`
+- [docs/analyses/workflow_guide.md](C:\Users\86515\Documents\Codex\literature-survey-system\docs\analyses\workflow_guide.md)
+- [docs/readmes/viewer_usage.md](C:\Users\86515\Documents\Codex\literature-survey-system\docs\readmes\viewer_usage.md)
 
 ---
 
-## 适合老师快速查看的内容 Suggested Files For Course Review
+## 适合交作业时展示的文件
+## Suggested Files for Submission Demo
 
-如果老师只看几个关键文件，建议重点看：
+建议至少展示这些文件：
 
 1. `README.md`
 2. `docs/analyses/project_analysis.md`
@@ -363,10 +442,31 @@ snps/weeklies/weekly-results-YYYY-MM-DD_HHMMSS.zip
 5. `outs/tables/comparison_table.csv`
 6. `outs/trends/trend_analysis.md`
 7. `outs/digests/weekly_digest_latest.md`
+8. `outs/stats/pipeline_status.json`
+9. `outs/stats/pipeline_history.json`
+
+---
+
+## 答辩时可以怎么解释
+## How To Explain This In a Defense
+
+你可以这样说：
+
+> 本项目不是让大模型直接代写综述，而是把综述工作拆解为“抓取、结构化抽取、分类、对比、趋势分析、周报生成”几个阶段。  
+> 大模型在其中承担的是结构化分析模块 `analysis module` 的角色，而不是终端写手。  
+> 原始数据、中间 JSON 卡片、分类体系、对比表和最终周报全部留档，因此整个系统是可审计、可追踪、可复现的。
+
+---
+
+## 进一步阅读 Further Reading
+
+- [docs/analyses/project_analysis.md](C:\Users\86515\Documents\Codex\literature-survey-system\docs\analyses\project_analysis.md)
+- [docs/analyses/workflow_guide.md](C:\Users\86515\Documents\Codex\literature-survey-system\docs\analyses\workflow_guide.md)
+- [docs/readmes/viewer_usage.md](C:\Users\86515\Documents\Codex\literature-survey-system\docs\readmes\viewer_usage.md)
 
 ---
 
 ## 一句话总结 One-Sentence Summary
 
-这个项目不是“让 AI 直接写综述”，而是“让 AI 参与一个可审计、可追踪、可增量更新的文献知识流水线”。  
-This project is not about asking AI to directly write a survey, but about using AI inside an auditable, traceable, incrementally updated literature knowledge pipeline.
+这不是“让 AI 直接写综述”，而是“让 AI 参与一个可审计、可追踪、可持续更新的文献知识流水线”。  
+This is not about asking AI to directly write a survey, but about using AI inside an auditable, traceable, continuously updated literature knowledge pipeline.
