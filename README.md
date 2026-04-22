@@ -1,4 +1,5 @@
 # arXiv Literature Survey System
+
 # arXiv 文献自动综述生成系统
 
 这是一个围绕 `arXiv` 构建的自动化文献追踪与综述生成项目。  
@@ -264,6 +265,7 @@ python -m pkgs.surveys.clis.run --max_results 80 --years 2
 ---
 
 ## 为什么这不是“直接让 AI 写综述”
+
 ## Why This Is Not Direct AI Ghostwriting
 
 这个项目专门保留了完整的中间过程，而不是只保留最终周报。  
@@ -284,6 +286,7 @@ The final report is generated from intermediate structured artifacts, not halluc
 ---
 
 ## Mock Mode 是什么
+
 ## What Mock Mode Means
 
 如果没有可用的真实 API Key，系统允许退化到 `mock mode`，以保证流程和界面还能跑通。  
@@ -321,6 +324,7 @@ This is not about preferring higher randomness, but about staying compatible fir
 ---
 
 ## GitHub Actions 自动运行
+
 ## GitHub Actions Automation
 
 仓库包含工作流文件：
@@ -355,6 +359,7 @@ This is not about preferring higher randomness, but about staying compatible fir
 ---
 
 ## 周次快照与下载
+
 ## Weekly Snapshots and Download
 
 为了便于每次自动运行后留档，项目会把结果按时间归档到：
@@ -431,6 +436,7 @@ arts/dists/snps/imports/
 ---
 
 ## 适合交作业时展示的文件
+
 ## Suggested Files for Submission Demo
 
 建议至少展示这些文件：
@@ -447,14 +453,7 @@ arts/dists/snps/imports/
 
 ---
 
-## 答辩时可以怎么解释
-## How To Explain This In a Defense
-
-你可以这样说：
-
-> 本项目不是让大模型直接代写综述，而是把综述工作拆解为“抓取、结构化抽取、分类、对比、趋势分析、周报生成”几个阶段。  
-> 大模型在其中承担的是结构化分析模块 `analysis module` 的角色，而不是终端写手。  
-> 原始数据、中间 JSON 卡片、分类体系、对比表和最终周报全部留档，因此整个系统是可审计、可追踪、可复现的。
+# 
 
 ---
 
